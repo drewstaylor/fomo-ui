@@ -3,6 +3,7 @@ import { Client } from './client';
 import { FromAtto } from './denom';
 
 const FOMO_CONTRACT = process.env.VUE_APP_FOMO_CONTRACT;
+const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
 
 // Queries
 
@@ -42,6 +43,7 @@ async function Deposit(amount = 0, client = null) {
   try {
     let funds = [coin(String(amount), client.chainInfo.currencies[0].coinMinimalDenom)];
     let deposit = FromAtto(amount);
+    let denom = (IsTestnet) ? "CONST" : "ARCH";
     let entrypoint = {
       deposit: {}
     };
@@ -51,7 +53,7 @@ async function Deposit(amount = 0, client = null) {
       FOMO_CONTRACT,
       entrypoint,
       client.fees,
-      "Fomo-ing in with " + deposit,
+      "Fomo-ing in with " + deposit + " " + denom,
       funds
     );
     return tx;

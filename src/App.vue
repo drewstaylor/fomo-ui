@@ -28,7 +28,10 @@
     <!-- Logged In -->
     <div class="account-data" v-if="connected && accounts.length">
       <p>{{accounts[0].address}}</p>
-      <p>{{formatFromAtto(accounts[0].balance.amount)}} {{ denom }}</p>
+      <p 
+        :alt="formatFromAtto(accounts[0].balance.amount) + ' ' + denom" 
+        :title="formatFromAtto(accounts[0].balance.amount) + ' ' + denom"
+      >{{balanceDisplayFormat(accounts[0].balance.amount)}} {{ denom }}</p>
     </div>
 
     <!-- Page Content -->
@@ -118,14 +121,6 @@ export default {
     disconnectWallet: async function () {
       sessionStorage.removeItem("connected");
       window.location.reload();
-    },
-    closeNotification: function () {
-      this.notify = {
-        type: null,
-        title: null,
-        msg: null,
-        img: null,
-      };
     },
     resolveUpdates: async function () {
       try {

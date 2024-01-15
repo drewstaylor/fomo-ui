@@ -27,7 +27,13 @@
 
     <!-- Logged In -->
     <div class="account-data" v-if="connected && accounts.length">
-      <p>{{accounts[0].address}}</p>
+      <div v-if="!player.id">
+        <p>{{accounts[0].address}}</p>
+      </div>
+      <div v-else>
+        <p class="player-id">{{ player.id }}</p>
+        <img class="avatar" :src="avatar" />
+      </div>
       <p 
         :alt="formatFromAtto(accounts[0].balance.amount) + ' ' + denom" 
         :title="formatFromAtto(accounts[0].balance.amount) + ' ' + denom"
@@ -46,6 +52,9 @@ import { Client, Accounts } from './util/client';
 import { FromAtto } from './util/denom';
 
 const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
+const DefaultAvatar = "/img/token.svg";
+const IPFS_GATEWAY_PREFIX = 'https://ipfs.io/ipfs/';
+const IPFS_CID_PREFIX = 'ipfs://';
 
 export default {
   name: 'Fomo',
@@ -54,6 +63,10 @@ export default {
     accounts: [],
     connected: false,
     connecting: false,
+    player: {
+      id: null,
+      avatar: null,
+    },
     walletTypes: ['keplr', 'cosmostation', 'leap'],
     walletType: null,
     render: 0,
@@ -67,20 +80,18 @@ export default {
       if (connected) {
         this.resumeConnectedState();
         this.connected = true;
+        this.trySetPlayer();
       }
     }
   },
   methods: {
     connectWallet: async function (wallet = "keplr") {
       if (this.walletTypes.indexOf(wallet) == -1) return;
-
       this.connecting = true;
       this.walletType = wallet;
-
       try {
         this.cwClient = await Client(this.walletType);
         this.accounts = await Accounts(this.cwClient);
-        console.log('?', this.cwClient, this.accounts);
         if (!this.accounts[0].address) return;
         this.connected = true;
         this.connecting = false;
@@ -91,7 +102,6 @@ export default {
         console.error(e);
       }
       this.render += 1;
-      // console.log('App', {cwClient: this.cwClient, accounts: this.accounts, walletType: this.walletType});
     },
     resumeConnectedState: async function (attempts = 0) {
       if (attempts >= 5) {
@@ -103,24 +113,16 @@ export default {
           let walletType = sessionStorage.getItem("connected");
           this.cwClient = await Client(walletType);
           this.accounts = await Accounts(this.cwClient);
-          // console.log('App', {cwClient: this.cwClient, accounts: this.accounts, walletType: walletType});
         }, 100);
       } catch (e) {
         await this.resumeConnectedState((attempts + 1));
       }
     },
-    connectHandler: function () {
-      window.scrollTo(0, 0);
-      const connectEl = document.getElementById('connect_modal');
-      connectEl.click();
-    },
-    connectCancel: function () {
-      this.connected = false;
-      this.connecting = false;
-    },
-    disconnectWallet: async function () {
-      sessionStorage.removeItem("connected");
-      window.location.reload();
+    trySetPlayer: function () {
+      if (window) {
+        let player = window.localStorage.getItem('player');
+        if (player) this.player = JSON.parse(player);
+      }
     },
     resolveUpdates: async function () {
       try {
@@ -142,7 +144,14 @@ export default {
       return account.slice(0,12) + "..." + account.slice(-5);
     },
   },
-  computed: {}
+  computed: {
+    avatar: function () {
+      if (!this.player.avatar) return DefaultAvatar;
+      let img = (this.player.avatar.substr(0,7) == IPFS_CID_PREFIX) 
+        ? this.player.avatar.replace(IPFS_CID_PREFIX, IPFS_GATEWAY_PREFIX) : this.player.avatar;
+      return img;
+    },
+  },
 }
 </script>
 

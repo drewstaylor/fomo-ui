@@ -36,18 +36,26 @@ export default {
     loading: true,
   }),
   emits: ['playerConfig'],
-  mounted: async function () {
-    // XXX TODO: Fix this race condition
-    setTimeout(async ()=> {
+  watch: {
+    async accounts() {
+      if (!Array.isArray(this.accounts)) return;
+      if (!this.accounts.length) return;
+      this.loading = true;
       await this.loadDomains();
-      this.loading = false;
-    }, 1000);
+      if (this.tokens.length) this.loading = false;
+    },
+  },
+  mounted: async function () {
+    console.log('mounted', this.accounts, this.cwClient);
+    await this.loadDomains();
+    if (this.tokens.length) this.loading = false;
   },
   methods: {
     loadDomains: async function () {
       if (!Array.isArray(this.accounts)) return;
       if (!this.accounts.length) return;
       // Load tokens
+      this.tokens = [];
       let finished = false, i = 0;
       do {
         let start = (i > 0) ? this.tokens[this.tokens.length - 1] : null;

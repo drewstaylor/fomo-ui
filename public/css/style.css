@@ -20,7 +20,8 @@ a {
 }
 
 a, a:focus, a:link, a:active, a:hover, a:visited {
-    color: #FF4D00;
+    /* color: #FF4D00; */
+    color: #05C46B;
 }
 
 a:hover, a:active, a:focus {
@@ -29,4 +30,8 @@ a:hover, a:active, a:focus {
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+.btn-inverse, .btn-inverse:focus, .btn-inverse:active {
+    background-color: #FFFFFF;
 }

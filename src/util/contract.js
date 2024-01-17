@@ -71,8 +71,6 @@ async function Deposit(amount = 0, client = null) {
  * @returns {ExecuteResult}
  */
 async function Claim(client = null) {
-  if (typeof amount !== 'number') return;
-  if (amount <= 0) return;
   if (!client) client = await Client();
   try {
     let entrypoint = {

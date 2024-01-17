@@ -176,7 +176,7 @@ export default {
     },
     displayName: function () {
       if (!this.accounts.length) return "";
-      if (!this.player.id) return this.accounts[0].address;
+      if (!this.player.id) return "player";
       return this.player.id;
     },
   },
@@ -190,20 +190,27 @@ export default {
   display: block;
   padding: 2em;
 }
-li.nav-item {
-  margin: 2em;
+.wallet-connect {
+  top: 5.5em;
+  left: 2.25em;
 }
 .wallet-connect li {
   cursor: pointer;
+}
+li.nav-item {
+  margin: 2em;
 }
 .img.avatar {
   width: 120px;
   height: 120px;
   background-size: contain;
+  background-color: #FFFFFF;
+  background-position: center center;
   background-repeat: no-repeat;
   position: relative;
+  border: 1px solid #000000;
 }
-.navbar {
+.navbar, .img.avatar {
   border-radius: 8px;
 }
 .navbar-collapse, .navbar {

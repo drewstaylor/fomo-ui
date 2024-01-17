@@ -45,7 +45,7 @@
             <p>Prepare to fomo!</p>
           </li>
           <li class="nav-item greeting" v-if="player.id && connected">
-            <p>Welcome back {{ displayName }}</p>
+            <p>Welcome back <a :href="profileLink + player.id" target="_blank">{{ displayName }}</a></p>
             <p>Ready to fomo?</p>
           </li>
           <li 
@@ -76,6 +76,7 @@ const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
 const DefaultAvatar = "/img/token.svg";
 const IPFS_GATEWAY_PREFIX = 'https://ipfs.io/ipfs/';
 const IPFS_CID_PREFIX = 'ipfs://';
+const ARCHID_PROFILE_LINK_PREFIX = (IsTestnet) ? "https://test.archid.app/domains/" : "https://archid.app/domains/";
 
 export default {
   name: 'Fomo',
@@ -92,6 +93,7 @@ export default {
     walletType: null,
     render: 0,
     denom: (IsTestnet) ? "CONST" : "ARCH",
+    profileLink: ARCHID_PROFILE_LINK_PREFIX,
     formatFromAtto: FromAtto,
   }),
   mounted: async function () {

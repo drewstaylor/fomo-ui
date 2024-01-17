@@ -27,6 +27,17 @@ async function Game(client = null) {
   }
 }
 
+async function PrizePool(client = null) {
+  if (!client) client = await Client();
+  try {
+    let balances = await client.bankClient.getAllBalances(FOMO_CONTRACT);
+    return balances[0];
+  } catch(e) {
+    console.error(e);
+    return {error: e};
+  }
+}
+
 // Txs
 
 /**
@@ -95,7 +106,7 @@ async function Claim(client = null) {
 
 
 // Exports
-const Query = { Game };
+const Query = { Game, PrizePool };
 const Execute = { Deposit, Claim};
 
 export {

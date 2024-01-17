@@ -1,4 +1,5 @@
 import { SigningArchwayClient } from '@archwayhq/arch3.js';
+import { StargateClient } from "@cosmjs/stargate";
 import { MainnetInfo } from '../chains/mainnet';
 import { ConstantineInfo } from '../chains/testnet.constantine';
 
@@ -11,6 +12,7 @@ const Blockchain = (IsTestnet) ? Testnet : Mainnet;
 let client = {
   offlineSigner: null,
   wasmClient: null,
+  bankClient: null,
   accountData: null,
   chainInfo: Blockchain,
   fees: "auto"
@@ -39,6 +41,7 @@ async function cosmostationClient() {
     { gasAdjustment: 1.4 }
   );
   client.accountData = await window.cosmostation.providers.keplr.getKey(Blockchain.chainId);
+  client.bankClient = await StargateClient.connect(Blockchain.rpc);
 
   return client;
 }
@@ -66,6 +69,7 @@ async function keplrClient() {
     { gasAdjustment: 1.4 }
   );
   client.accountData = await window.keplr.getKey(Blockchain.chainId);
+  client.bankClient = await StargateClient.connect(Blockchain.rpc);
 
   return client;
 }
@@ -99,6 +103,7 @@ async function leapClient() {
     { gasAdjustment: 1.4 }
   );
   client.accountData = await window.leap.getKey(Blockchain.chainId);
+  client.bankClient = await StargateClient.connect(Blockchain.rpc);
 
   return client;
 }
@@ -112,6 +117,7 @@ async function offlineClient() {
     chainInfo: Blockchain,
     readOnly: true
   };
+  client.bankClient = await StargateClient.connect(Blockchain.rpc);
 
   return offlineClient;
 }

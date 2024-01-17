@@ -9,7 +9,7 @@
 }
 
 html, body {
-    background-color: #000000;
+    background-color: #1E272E;
     color: #FFFFFF;
     font-family: Play-Regular;
     font-size: larger;
@@ -20,7 +20,6 @@ a {
 }
 
 a, a:focus, a:link, a:active, a:hover, a:visited {
-    /* color: #FF4D00; */
     color: #05C46B;
 }
 

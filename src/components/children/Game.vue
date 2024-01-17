@@ -16,7 +16,4 @@ export default {
 </script>
 
 <style scoped>
-.game {
-  margin-top: 2em;
-}
 </style>

@@ -1,0 +1,32 @@
+@font-face {
+    font-family: Play-Regular;
+    src: url('../font/play/Play-Regular.ttf');
+}
+
+@font-face {
+    font-family: Play-Bold;
+    src: url('../font/play/Play-Bold.ttf');
+}
+
+html, body {
+    background-color: #000000;
+    color: #FFFFFF;
+    font-family: Play-Regular;
+    font-size: larger;
+}
+
+a {
+    text-decoration: none;
+}
+
+a, a:focus, a:link, a:active, a:hover, a:visited {
+    color: #FF4D00;
+}
+
+a:hover, a:active, a:focus {
+    text-decoration: underline;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

@@ -203,7 +203,16 @@ li.nav-item {
   background-repeat: no-repeat;
   position: relative;
 }
+.navbar {
+  border-radius: 8px;
+}
+.navbar-collapse, .navbar {
+  background-color: #333333 !important;
+}
 .navbar, .nav-item {
   align-items: center;
+}
+.page-content {
+  margin-top: 2em;
 }
 </style>

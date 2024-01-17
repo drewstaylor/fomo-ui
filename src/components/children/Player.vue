@@ -2,7 +2,7 @@
   <div class="player-id-select" v-if="!loading">
     <div v-if="tokens.length">
       <p>Select an ArchID to use for this game</p>
-      <ul>
+      <ul class="token-list">
         <li v-for="tokenId in tokens" :key="tokenId">
           <a class="cursor-pointer" @click="selectDomain(tokenId);">{{tokenId}}</a>
         </li>
@@ -86,7 +86,8 @@ export default {
 </script>
 
 <style scoped>
-.cursor-pointer {
-  cursor: pointer;
+ul.token-list, ul.token-list li {
+  list-style: none;
+  padding-left: 0;
 }
 </style>

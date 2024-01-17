@@ -35,7 +35,7 @@ export default {
     tokens: [],
     loading: true,
   }),
-  emits: ['playerConfig'],
+  emits: ['playerConfig', 'setPlayer'],
   watch: {
     async accounts() {
       if (!Array.isArray(this.accounts)) return;

@@ -1,43 +1,64 @@
 <template>
   <div class="app">
-    <div class="connect">
-      <!-- Not Logged In -->
-      <div class="wallet-choice" v-if="!connected">
-        <p class="title">Choose a wallet to connect</p>
-        <p class="subtitle">Select from the supported wallets to get started.</p>
-        <ul class="wallet-connect row">
+    <!-- Top Nav -->
+    <div class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          
+          <!-- Not Logged In -->
+          <li class="wallet-choice nav-item" v-if="!connected">
+            <button 
+              class="btn btn-inverse nav-link dropdown-toggle" 
+              role="button" 
+              data-bs-toggle="dropdown" 
+              aria-expanded="false"
+            >Connect</button>
+            <ul class="wallet-connect row dropdown-menu nav-item dropdown">
+              <li 
+                id="connect_keplr" 
+                class="btn-connect btn-keplr dropdown-item" 
+                @click="connectWallet('keplr');"
+              ><span class="icon icon-keplr"></span>Keplr</li>
+              <li 
+                id="connect_cosmostation" 
+                class="btn-connect btn-cosmostation dropdown-item" 
+                @click="connectWallet('cosmostation');"
+              ><span class="icon icon-cosmostation"></span>Cosmostation</li>
+              <li 
+                id="connect_leap" 
+                class="btn-connect btn-leap dropdown-item" 
+                @click="connectWallet('leap');"
+              ><span class="icon icon-leap"></span>Leap</li>
+            </ul>
+          </li>
+        
+
+          <!-- Logged In -->
+          <li class="pfp nav-item" v-if="player.avatar">
+            <div 
+              class="img avatar" 
+              :style="'background-image: url('+ avatar +');'"
+            ></div>
+          </li>
+          <li class="nav-item greeting" v-if="!player.id && connected">
+            <p>Greetings {{ displayName }}</p>
+            <p>Prepare to fomo!</p>
+          </li>
+          <li class="nav-item greeting" v-if="player.id && connected">
+            <p>Welcome back {{ displayName }}</p>
+            <p>Ready to fomo?</p>
+          </li>
           <li 
-            id="connect_keplr" 
-            class="btn-connect btn-keplr" 
-            @click="connectWallet('keplr');"
-          ><span class="icon icon-keplr"></span>Keplr</li>
-          <li 
-            id="connect_cosmostation" 
-            class="btn-connect btn-cosmostation" 
-            @click="connectWallet('cosmostation');"
-          ><span class="icon icon-cosmostation"></span>Cosmostation</li>
-          <li 
-            id="connect_leap" 
-            class="btn-connect btn-leap" 
-            @click="connectWallet('leap');"
-          ><span class="icon icon-leap"></span>Leap</li>
+            class="balance nav-item" 
+            v-if="connected && player.id"
+            :alt="formatFromAtto(accounts[0].balance.amount) + ' ' + denom" 
+            :title="formatFromAtto(accounts[0].balance.amount) + ' ' + denom"
+          >
+            <p>You have</p>
+            <p>{{balanceDisplayFormat(accounts[0].balance.amount)}} {{ denom }}</p>
+          </li>
         </ul>
       </div>
-    </div>
-
-    <!-- Logged In -->
-    <div class="account-data" v-if="connected && accounts.length">
-      <div v-if="!player.id">
-        <p>{{accounts[0].address}}</p>
-      </div>
-      <div v-else>
-        <p class="player-id">{{ player.id }}</p>
-        <img class="avatar" :src="avatar" />
-      </div>
-      <p 
-        :alt="formatFromAtto(accounts[0].balance.amount) + ' ' + denom" 
-        :title="formatFromAtto(accounts[0].balance.amount) + ' ' + denom"
-      >{{balanceDisplayFormat(accounts[0].balance.amount)}} {{ denom }}</p>
     </div>
 
     <!-- Page Content -->
@@ -151,6 +172,11 @@ export default {
         ? this.player.avatar.replace(IPFS_CID_PREFIX, IPFS_GATEWAY_PREFIX) : this.player.avatar;
       return img;
     },
+    displayName: function () {
+      if (!this.accounts.length) return "";
+      if (!this.player.id) return this.accounts[0].address;
+      return this.player.id;
+    },
   },
 }
 </script>
@@ -162,7 +188,20 @@ export default {
   display: block;
   padding: 2em;
 }
+li.nav-item {
+  margin: 2em;
+}
 .wallet-connect li {
   cursor: pointer;
+}
+.img.avatar {
+  width: 120px;
+  height: 120px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: relative;
+}
+.navbar, .nav-item {
+  align-items: center;
 }
 </style>

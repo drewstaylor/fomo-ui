@@ -45,6 +45,14 @@
         >Claim Prize</button>
       </div>
     </div>
+
+    <!-- Tx Status Notifications -->
+    <div class="tx-msg" v-if="status.notification">
+      <span class="close-x" @click="status = {notification: null, type: null}">&times;</span>
+      <div class="bg-info" v-if="status.type == 'info'">{{status.notification}}</div>
+      <div class="bg-success" v-if="status.type == 'success'">{{status.notification}}</div>
+      <div class="bg-danger" v-if="status.type == 'error'">{{status.notification}}</div>
+    </div>
   </div>
 </template>
 
@@ -73,6 +81,10 @@ export default {
     timer: null,
     profileLink: ARCHID_PROFILE_LINK_PREFIX,
     executeResult: null,
+    status: {
+      notification: null,
+      type: null,
+    },
     formatFromAtto: FromAtto,
   }),
   mounted: async function () {
@@ -136,15 +148,44 @@ export default {
     },
     // Execute fns
     deposit: async function () {
-      // XXX TODO: Add support for depositing custom amounts
+      this.status = {
+        notification: "Waiting for deposit transaction to confirm...",
+        type: "info",
+      };
+      // XXX TODO: Add support for depositing custom amounts?
       let depositAmount = (this.state.min_deposit) ? Number(this.state.min_deposit) : 1000000000000000000;
       this.executeResult = await this.fomo.Execute.Deposit(depositAmount, this.cwClient);
+      if (this.executeResult['error']) {
+        return this.status = {
+          notification: this.executeResult.error,
+          type: "error",
+        };
+      }
+      this.status = {
+        notification: "Deposit successfully executed",
+        type: "success",
+      };
       await this.loadState();
       this.$root.resolveUpdates();
       console.log(this.executeResult);
     },
     claim: async function () {
+      this.status = {
+        notification: "Waiting for prize claim transaction to confirm...",
+        type: "info",
+      };
+      this.status = {notification: null, type: 'info'};
       this.executeResult = await this.fomo.Execute.Claim(this.cwClient);
+      if (this.executeResult['error']) {
+        return this.status = {
+          notification: this.executeResult.error,
+          type: "error",
+        };
+      }
+      this.status = {
+        notification: "Congratulations! Prize successfully claimed",
+        type: "success",
+      };
       await this.loadState();
       this.$root.resolveUpdates();
       console.log(this.executeResult);
@@ -207,11 +248,28 @@ ul.stats li span {
   margin-bottom: 2em;
   margin-left: 0.5em;
   flex-direction: column;
-  /* background-color: #05C46B; */
 }
 
 .timer .time-remaining {
   text-align: center;
   font-size: 5em;
 }
+
+/* .tx-msg {
+} */
+
+.tx-msg span {
+  float: right;
+  cursor: pointer;
+  position: relative;
+  top: 1.5em;
+  right: 0.5em;
+}
+
+.tx-msg div {
+  padding: 0.25em;
+  border-radius: 8px;
+  clear: both;
+}
+
 </style>

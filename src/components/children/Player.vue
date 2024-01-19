@@ -9,8 +9,8 @@
       </ul>
     </div>
     <div v-else>
-      <p>Fomo requires an ArchID domain to play. Visit <a href="https://archid.app" target="_blank">ArchID.app</a> to claim yours today!</p>
-      <p>Still Fomo-ing? You can watch the game in "read only" mode.</p>
+      <p>Fomo requires an ArchID domain to play. Visit <a :href="archIdMintLink" target="_blank">{{mintLinkDisplay}}</a> to claim yours today!</p>
+      <p>Still Fomo-ing? You can watch the game in read only mode.</p>
       <button class="btn btn-primary" @click="startWatching();">Start Watching</button>
     </div>
   </div>
@@ -19,6 +19,7 @@
 <script>
 import { Token, TokensOf } from '../../util/archid';
 
+const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
 const CW721_CONTRACT = process.env.VUE_APP_ARCHID_CW721_CONTRACT;
 const DefaultAvatar = "/img/token.svg";
 
@@ -34,6 +35,7 @@ export default {
     cw721: CW721_CONTRACT,
     tokens: [],
     loading: true,
+    archIdMintLink: (IsTestnet) ? "https://test.archid.app" : "https://archid.app",
   }),
   emits: ['playerConfig', 'setPlayer'],
   watch: {
@@ -42,7 +44,7 @@ export default {
       if (!this.accounts.length) return;
       this.loading = true;
       await this.loadDomains();
-      if (this.tokens.length) this.loading = false;
+      this.loading = false;
     },
   },
   mounted: async function () {
@@ -81,7 +83,13 @@ export default {
       this.$emit('watchGame', true);
     }
   },
-  computed: {},
+  computed: {
+    mintLinkDisplay: function () {
+      if (!this.archIdMintLink) return "archid.app";
+      else if (this.archIdMintLink.length <= 8) return "archid.app";
+      else return this.archIdMintLink.slice(8);
+    }
+  },
 }
 </script>
 

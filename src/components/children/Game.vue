@@ -27,7 +27,7 @@
       <div class="info-msg">
         <p v-if="winning == 'You'">You're in the lead!</p>
       </div>
-      <div class="controls">
+      <div class="controls" v-if="!readOnly">
         <button 
           class="btn btn-primary"
           @click="deposit();"
@@ -37,7 +37,7 @@
 
     <!-- Gameover -->
     <div class="gameover row" v-if="gameover">
-      <div class="controls" v-if="accounts.length">
+      <div class="controls" v-if="accounts.length && !readOnly">
         <button 
           class="btn btn-primary" 
           @click="claim();"

@@ -42,7 +42,7 @@
           </li>
           <li class="nav-item greeting" v-if="!player.id && connected">
             <p>Greetings {{ displayName }}</p>
-            <p>Prepare to fomo!</p>
+            <p>Claim your <a :href="archIdMintLink" target="_blank">ArchID</a> to participate in Fomo!</p>
           </li>
           <li class="nav-item greeting" v-if="player.id && connected">
             <p>Welcome back <a :href="profileLink + player.id" target="_blank">{{ displayName }}</a></p>
@@ -89,6 +89,7 @@ export default {
       id: null,
       avatar: null,
     },
+    archIdMintLink: (IsTestnet) ? "https://test.archid.app" : "https://archid.app",
     walletTypes: ['keplr', 'cosmostation', 'leap'],
     walletType: null,
     render: 0,

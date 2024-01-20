@@ -9,7 +9,7 @@
           <a :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a>
         </li>
         <li><span>Prize Pool:</span> {{ prizeDisplay }}</li>
-        <li v-if="!gameover"><span>Minimum Deposit:</span> {{ minDeposit }}</li>
+        <!-- <li v-if="!gameover"><span>Minimum Deposit:</span> {{ minDeposit }}</li> -->
         <!-- Gameover -->
         <li v-if="gameover">
           <h3 class="winner-display">{{ loadDomains(gameWinner) }} has won Fomo!</h3>

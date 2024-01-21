@@ -66,7 +66,6 @@ export default {
         else if (!query.tokens.length) return finished = true;
         else this.tokens = [...this.tokens, ...query.tokens];
       } while (!finished);
-      console.log("Tokens?", this.tokens);
     },
     selectDomain: async function (archid) {
       let domain = await Token(archid, this.cw721, this.cwClient);

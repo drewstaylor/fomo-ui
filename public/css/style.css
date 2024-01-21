@@ -34,3 +34,9 @@ a:hover, a:active, a:focus {
 .btn-inverse, .btn-inverse:focus, .btn-inverse:active {
     background-color: #FFFFFF;
 }
+
+@media (max-width: 660px) {
+    .timer .time-remaining {
+        font-size: 2em !important;
+    }
+}

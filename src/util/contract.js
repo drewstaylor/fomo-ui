@@ -29,9 +29,11 @@ async function Game(client = null) {
 
 async function PrizePool(client = null) {
   if (!client) client = await Client();
+  if (!client.wasmClient) client = await Client('offline');
   try {
-    let balances = await client.bankClient.getAllBalances(FOMO_CONTRACT);
-    return balances[0];
+    let denom = (IsTestnet) ? "aconst" : "aarch";
+    let balance = await client.wasmClient.queryClient.bank.balance(FOMO_CONTRACT, denom);
+    return balance;
   } catch(e) {
     console.error(e);
     return {error: e};

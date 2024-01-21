@@ -13,7 +13,7 @@
         <!-- Gameover -->
         <li v-if="gameover">
           <h3 class="winner-display">{{ loadDomains(gameWinner) }} has won Fomo!</h3>
-          <p class="descr">Game will restart once they've claimed their prize</p>
+          <p class="descr">Game will restart when they've claimed their prize</p>
         </li>
       </ul>
     </div>
@@ -36,7 +36,7 @@
     </div>
 
     <!-- Gameover -->
-    <div class="gameover row" v-if="gameover">
+    <div class="gameover row" v-if="gameover && accounts">
       <div class="controls" v-if="accounts.length && !readOnly">
         <button 
           class="btn btn-primary" 
@@ -88,20 +88,17 @@ export default {
     formatFromAtto: FromAtto,
   }),
   mounted: async function () {
-    console.log('Game mounted', this.accounts, this.cwClient, this.readOnly);
     // Initial State
     await this.loadState();
-    
     // Timer
     setInterval(() => {
       this.gameTimer();
     }, 1000); // Update timer 1x per second
-    
     // Poll for contract changes
     // XXX TODO: Replace this w/ grpc socket
     setInterval(async () => {
       await this.loadState();
-    }, 30000); // 30 second
+    }, 10000); // 10 seconds
   },
   methods: {
     // State
@@ -131,25 +128,28 @@ export default {
       await this.loadWinning();
     },
     loadDomains: async function (address) {
-      if (!Array.isArray(this.accounts)) return;
-      if (!this.accounts.length) return;
       let query = await TokensOf(this.cw721, address, this.cwClient, 1, null);
       if (!query.tokens) return '';
       if (!query.tokens.length) return '';
       return query.tokens[0];
     },
     loadPrizePool: async function () {
-      this.prize = await this.fomo.Query.PrizePool();
+      let client = (this.readOnly) ? this.readOnlyClient : this.cwClient;
+      this.prize = await this.fomo.Query.PrizePool(client);
     },
     loadWinning: async function () {
       if (!this.state.last_depositor) return;
-      if (this.state.last_depositor == this.accounts[0].address) this.winning = "You";
-      else this.winning = await this.loadDomains(this.state.last_depositor);
+      if (this.readOnly) {
+        this.winning = await this.loadDomains(this.state.last_depositor);
+      } else {
+        if (this.state.last_depositor == this.accounts[0].address) this.winning = "You";
+        else this.winning = await this.loadDomains(this.state.last_depositor);
+      }
     },
     // Execute fns
     deposit: async function () {
       this.status = {
-        notification: "Waiting for deposit transaction to confirm...",
+        notification: "Waiting for deposit to confirm...",
         type: "info",
       };
       // XXX TODO: Add support for depositing custom amounts?

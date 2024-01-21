@@ -48,7 +48,6 @@ export default {
     },
   },
   mounted: async function () {
-    console.log('Player mounted', this.accounts, this.cwClient);
     await this.loadDomains();
     if (this.tokens.length) this.loading = false;
   },

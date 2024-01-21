@@ -19,6 +19,14 @@
     ></Game>
 
   </div>
+
+  <!-- Game Preview -->
+  <div v-if="!connected && readOnlyClient">
+    <Game 
+      v-bind:cwClient="readOnlyClient"
+      v-bind:readOnly="true"
+    ></Game>
+  </div>
 </template>
 
 <script>
@@ -36,6 +44,7 @@ export default {
   components: { Game, Player },
   data: () => ({
     cwClient: null,
+    readOnlyClient: null,
     accounts: null,
     connected: false,
     states: STATES,
@@ -47,13 +56,10 @@ export default {
   mounted: async function () {
     if (window) {
       let connected = window.sessionStorage.getItem('connected');
-      if (connected) {
-        this.resumeConnectedState();
-      } else {
-        this.cwClient = await Client('offline');
-      }
+      if (connected) this.resumeConnectedState();
     }
     if (this.$root.connected) this.connected = true;
+    this.readOnlyClient = await Client('offline');
   },
   methods: {
     resumeConnectedState: async function (attempts = 0) {
@@ -73,7 +79,6 @@ export default {
       }
     },
     setPlayer: async function (player) {
-      console.log('playerConfig', player);
       // if (window) window.localStorage.setItem("player", JSON.stringify(player));
       this.$root.player.id = player.id;
       this.$root.player.avatar = player.avatar;

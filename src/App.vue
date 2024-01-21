@@ -58,6 +58,9 @@
             <p>{{balanceDisplayFormat(accounts[0].balance.amount)}} {{ denom }}</p>
           </li>
         </ul>
+        <div class="logout" v-if="connected">
+          <button class="btn btn-inverse" @click="logout();">Logout</button>
+        </div>
       </div>
     </div>
 
@@ -99,12 +102,11 @@ export default {
   }),
   mounted: async function () {
     if (window) {
-      this.route = location.pathname;
       let connected = window.sessionStorage.getItem('connected');
       if (connected) {
         this.resumeConnectedState();
-        this.connected = true;
         this.trySetPlayer();
+        this.connected = true;
       }
     }
   },
@@ -140,6 +142,14 @@ export default {
         }, 100);
       } catch (e) {
         await this.resumeConnectedState((attempts + 1));
+      }
+    },
+    logout: function () {
+      try {
+        window.sessionStorage.removeItem('connected');
+        window.location.reload();
+      } catch (e) {
+        console.error(e);
       }
     },
     trySetPlayer: function () {
@@ -222,5 +232,8 @@ li.nav-item {
 }
 .page-content {
   margin-top: 2em;
+}
+.logout {
+  margin: 2em;
 }
 </style>

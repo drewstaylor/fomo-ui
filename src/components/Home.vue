@@ -55,7 +55,7 @@ export default {
   }),
   mounted: async function () {
     if (window) {
-      let connected = window.sessionStorage.getItem('connected');
+      let connected = sessionStorage.getItem('connected');
       if (connected) this.resumeConnectedState();
     }
     if (this.$root.connected) this.connected = true;
@@ -79,7 +79,7 @@ export default {
       }
     },
     setPlayer: async function (player) {
-      // if (window) window.localStorage.setItem("player", JSON.stringify(player));
+      if (window) sessionStorage.setItem("player", JSON.stringify(player));
       this.$root.player.id = player.id;
       this.$root.player.avatar = player.avatar;
       this.state = this.gameState;

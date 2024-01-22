@@ -42,20 +42,31 @@ export default {
     async accounts() {
       if (!Array.isArray(this.accounts)) return;
       if (!this.accounts.length) return;
-      this.loading = true;
       await this.loadDomains();
-      this.loading = false;
+    },
+    tokens() {
+      if (!Array.isArray(this.accounts) || !Array.isArray(this.tokens)) return;
+      if (!this.tokens.length) return;
+      // Try set player
+      let player = sessionStorage.getItem("player");
+      if (player) {
+        try {
+          let playerObj = JSON.parse(player);
+          if (this.tokens.indexOf(player['id'])) this.selectDomain(playerObj.id);
+        } catch(e) {
+          console.error(e);
+        }
+      }
+      setTimeout(()=>{ this.loading = false; }, 100);
     },
   },
-  mounted: async function () {
-    await this.loadDomains();
-    if (this.tokens.length) this.loading = false;
-  },
+  mounted: async function () {},
   methods: {
     loadDomains: async function () {
       if (!Array.isArray(this.accounts)) return;
       if (!this.accounts.length) return;
       // Load tokens
+      this.loading = true;
       this.tokens = [];
       let finished = false, i = 0;
       do {

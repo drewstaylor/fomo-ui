@@ -36,12 +36,12 @@
     </div>
 
     <!-- Gameover -->
-    <div class="gameover row" v-if="gameover && accounts">
+    <div class="gameover row" v-if="gameover && accounts && state.last_depositor">
       <div class="controls" v-if="accounts.length && !readOnly">
         <button 
           class="btn btn-primary" 
           @click="claim();"
-          :disabled="gameLeader !== accounts[0].address"
+          :disabled="state.last_depositor !== accounts[0].address"
         >Claim Prize</button>
       </div>
     </div>

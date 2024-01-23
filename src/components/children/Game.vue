@@ -12,8 +12,9 @@
         <!-- <li v-if="!gameover"><span>Minimum Deposit:</span> {{ minDeposit }}</li> -->
         <!-- Gameover -->
         <li v-if="gameover">
-          <h3 class="winner-display">{{ loadDomains(gameWinner) }} has won Fomo!</h3>
-          <p class="descr">Game will restart when they've claimed their prize</p>
+          <h3 class="winner-display" v-if="winning == 'You'">{{ winning }} have won Fomo!</h3>
+          <h3 class="winner-display" v-else>{{ winning }} has won Fomo!</h3>
+          <p class="descr">Game will restart when the winner has claimed their prize</p>
         </li>
       </ul>
     </div>

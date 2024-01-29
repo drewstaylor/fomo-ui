@@ -217,12 +217,12 @@ export default {
 }
 .page-content.col.left, .navbar.col.right {
   max-width: 50%;
-  border-radius: 16px;
-  border: 1px solid #FF4D00;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0;
+  padding: 0;
 }
 .page-content.col.left {
+  border-radius: 16px;
+  border: 1px solid #FF4D00;
   margin: -1px;
   margin-right: 1em;
   max-height: 855px;

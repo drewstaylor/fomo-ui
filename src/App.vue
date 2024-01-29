@@ -1,7 +1,12 @@
 <template>
-  <div class="app">
-    <!-- Top Nav -->
-    <div class="navbar">
+  <div class="app row">
+    <!-- Page Content -->
+    <div class="page-content col left">
+      <router-view :key="render" />
+    </div>
+
+    <!-- User / Nav -->
+    <div class="navbar col right">
       <div class="navbar-brand">
         <div class="brand-wrapper row">
           <div class="col left raised">
@@ -73,11 +78,6 @@
           <button class="btn btn-inverse" @click="logout();">Logout</button>
         </div>
       </div>
-    </div>
-
-    <!-- Page Content -->
-    <div class="page-content">
-      <router-view :key="render" />
     </div>
   </div>
 </template>
@@ -209,8 +209,25 @@ export default {
 .app {
   max-width: 1440px;
   margin: auto;
-  display: block;
-  padding: 2em;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+.page-content.col.left, .navbar.col.right {
+  max-width: 50%;
+  border-radius: 16px;
+  border: 1px solid #FF4D00;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.page-content.col.left {
+  margin: -1px;
+  margin-right: 1em;
+  max-height: 855px;
+  overflow: hidden;
+  padding: 0;
 }
 .wallet-connect {
   top: 5.5em;

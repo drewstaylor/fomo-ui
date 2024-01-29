@@ -1,4 +1,16 @@
 <template>
+
+  <div class="grid-container">
+    <div class="grid1">
+      <div class="grid1-fade"></div>
+      <div class="grid1-lines"></div>
+    </div>
+    <div class="grid2">
+      <div class="grid2-fade"></div>
+      <div class="grid2-lines"></div>
+    </div>
+  </div>
+
   <div class="game" v-if="state.expiration">
     <!-- Game Data Display -->
     <div class="game-data row">
@@ -230,6 +242,11 @@ export default {
 </script>
 
 <style scoped>
+.game {
+  position: absolute;
+  top: 5em;
+  max-width: 678px;
+}
 ul.stats {
   list-style: none;
 }

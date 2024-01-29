@@ -1,12 +1,23 @@
 <template>
   <div class="app">
     <!-- Top Nav -->
-    <div class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          
-          <!-- Not Logged In -->
-          <li class="wallet-choice nav-item" v-if="!connected">
+    <div class="navbar">
+      <div class="navbar-brand">
+        <div class="brand-wrapper row">
+          <div class="col left raised">
+            <span class="brand brand-1">Network</span>
+            <span class="brand brand-2">Wars</span>
+          </div>
+          <div class="col right fade-web-right"></div>
+        </div>
+      </div>
+      <div class="get-connected">
+        <button class="btn btn-connect btn-primary">Connect</button>
+      </div>
+      <div class="connected" v-if="connected">
+        <!-- Not Logged In -->
+        <ul>
+          <!-- <li class="wallet-choice nav-item" v-if="!connected">
             <button 
               class="btn btn-inverse nav-link dropdown-toggle" 
               role="button" 
@@ -30,7 +41,7 @@
                 @click="connectWallet('leap');"
               ><span class="icon icon-leap"></span>Leap</li>
             </ul>
-          </li>
+          </li> -->
         
 
           <!-- Logged In -->
@@ -196,7 +207,7 @@ export default {
 
 <style scoped>
 .app {
-  max-width: 1080px;
+  max-width: 1440px;
   margin: auto;
   display: block;
   padding: 2em;
@@ -221,19 +232,49 @@ li.nav-item {
   position: relative;
   border: 1px solid #000000;
 }
+.navbar {
+  max-width: 50%;
+}
+.navbar, .nav-item {
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.navbar-brand {
+  height: 150px;
+  border-radius: 16px;
+  border: 1px solid #FF4D00;
+  background: rgba(255, 77, 0, 0.20);
+  box-sizing: border-box;
+  flex: 1 0 0;
+  padding: 0.5em;
+  overflow: hidden;
+}
+.col.left.raised {
+  z-index: 100;
+}
 .navbar, .img.avatar {
   border-radius: 8px;
 }
 .navbar-collapse, .navbar {
-  background-color: #333333 !important;
-}
-.navbar, .nav-item {
-  align-items: center;
+  background-color: #000000 !important;
 }
 .page-content {
   margin-top: 2em;
 }
 .logout {
   margin: 2em;
+}
+.btn-connect {
+  border-radius: 12px;
+  border: 1px solid #FF4D00;
+  background: #FF4D00;
+  box-shadow: 3px 9px 32px -4px rgba(0, 0, 0, 0.07);
+  display: flex;
+  height: 150px;
+  padding: 0px 24px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1 0 0;
 }
 </style>

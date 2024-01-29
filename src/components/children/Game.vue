@@ -9,7 +9,6 @@
           <a :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a>
         </li>
         <li><span>Prize Pool:</span> {{ prizeDisplay }}</li>
-        <!-- <li v-if="!gameover"><span>Minimum Deposit:</span> {{ minDeposit }}</li> -->
         <!-- Gameover -->
         <li v-if="gameover">
           <h3 class="winner-display" v-if="winning == 'You'">{{ winning }} have won Fomo!</h3>
@@ -22,8 +21,8 @@
     <!-- Game Active -->
     <div class="gameplay row" v-if="!gameover">
       <div class="timer" v-if="timer">
-        <p class="row">Time Remaining</p>
         <h1 class="row time-remaining">{{timer}}</h1>
+        <p class="row">Time Remaining</p>
       </div>
       <div class="info-msg">
         <p v-if="winning == 'You'">You're in the lead!</p>
@@ -235,15 +234,9 @@ ul.stats {
   list-style: none;
 }
 
-ul.stats li span {
-  color: #808E9B;
-  margin-right: 0.25em;
-}
-
 .timer {
   min-height: 250px;
   display: flex;
-  /* align-items: center; */
   justify-content: center;
   border-radius: 8px;
   margin-bottom: 2em;
@@ -255,9 +248,6 @@ ul.stats li span {
   text-align: center;
   font-size: 5em;
 }
-
-/* .tx-msg {
-} */
 
 .tx-msg span {
   float: right;

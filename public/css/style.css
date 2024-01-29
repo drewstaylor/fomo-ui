@@ -8,10 +8,25 @@
     src: url('../font/play/Play-Bold.ttf');
 }
 
+@font-face {
+    font-family: JetBrains-Mono;
+    src: url('../font/JetBrains_Mono/JetBrainsMono-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: JetBrains-Mono-Italic;
+    src: url('../font/JetBrains_Mono/JetBrainsMono-Italic-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: ArchivoBlack-Regular;
+    src: url('../font/Archivo_Black/ArchivoBlack-Regular.ttf');
+}
+
 html, body {
-    background-color: #1E272E;
-    color: #FFFFFF;
-    font-family: Play-Regular;
+    background-color: #000000;
+    color: #FF4D00;
+    font-family: JetBrains-Mono;
     font-size: larger;
 }
 
@@ -20,19 +35,84 @@ a {
 }
 
 a, a:focus, a:link, a:active, a:hover, a:visited {
-    color: #05C46B;
+    color: #FF4D00;
 }
 
 a:hover, a:active, a:focus {
     text-decoration: underline;
 }
 
+.brand {
+    font-family: ArchivoBlack-Regular;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.brand-1 {
+    color: #FF4D00;
+    font-size: 50.809px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 90%;
+    display: block;
+}
+
+.brand-2 {
+    font-size: 99.36px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 90%;
+    background: linear-gradient(180deg, #DB4139 9.82%, #982826 63.33%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: block;
+}
+
+.brand-wrapper {
+    overflow: hidden;
+}
+
+.fade-web-right {
+    background: linear-gradient(to left, #FF4D00 1px, transparent 0), linear-gradient(to top, #FF4D00 1px, transparent 0);
+    background-size: 45px 30px;
+    background-repeat: repeat;
+    border-radius: 50%;
+    transform: scale(1.3) skewY(16deg) rotate(-20deg);
+    /* max-width: 40%;
+    position: relative;
+    left: -42px; */
+}
+
 .cursor-pointer {
     cursor: pointer;
 }
 
-.btn-inverse, .btn-inverse:focus, .btn-inverse:active {
-    background-color: #FFFFFF;
+.btn {
+    color: #FFFFFF;
+}
+
+.btn-primary, .btn-primary:hover .btn-primary:focus, .btn-primary:active {
+    border-radius: 12px !important;
+    border: 1px solid #FF4D00 !important;
+    background: #FF4D00 !important;
+    box-shadow: 3px 9px 32px -4px rgba(0, 0, 0, 0.07) !important;
+}
+
+.btn-inverse, .btn-inverse:hover, .btn-inverse:focus, .btn-inverse:active {
+    border-radius: 8px !important;
+    border: 1px solid #FF4D00 !important;
+    background: #000 !important;
+}
+
+.btn-secondary, .btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active {
+    border-radius: 8px !important;
+    border: 1px solid #FF4D00 !important;
+    background: #000 !important;
+    border-radius: 4px !important;
+    border: 1px solid #FF4D00 !important;
+    background: linear-gradient(0deg, rgba(255, 77, 0, 0.30) 0%, rgba(255, 77, 0, 0.30) 100%), #000 !important;
+    box-shadow: 3px 9px 32px -4px rgba(0, 0, 0, 0.07) !important;
 }
 
 @media (max-width: 660px) {

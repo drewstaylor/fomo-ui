@@ -12,29 +12,12 @@
   </div>
 
   <div class="game" v-if="state.expiration">
-    <!-- Game Data Display -->
-    <div class="game-data row">
-      <ul class="stats" v-if="state.last_depositor">
-        <!-- Game Active -->
-        <li v-if="!gameover">
-          <span>Leader:</span>&nbsp;
-          <a :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a>
-        </li>
-        <li><span>Prize Pool:</span> {{ prizeDisplay }}</li>
-        <!-- Gameover -->
-        <li v-if="gameover">
-          <h3 class="winner-display" v-if="winning == 'You'">{{ winning }} have won Fomo!</h3>
-          <h3 class="winner-display" v-else>{{ winning }} has won Fomo!</h3>
-          <p class="descr">Game will restart when the winner has claimed their prize</p>
-        </li>
-      </ul>
-    </div>
 
-    <!-- Game Active -->
-    <div class="gameplay row" v-if="!gameover">
+    <!-- Game Active (Timer) -->
+    <div class="gameplay" v-if="!gameover">
       <div class="timer" v-if="timer">
-        <h1 class="row time-remaining">{{timer}}</h1>
-        <p class="row">Time Remaining</p>
+        <div class="timer-display">{{timer}}</div>
+        <div class="time-remaining">Time Remaining</div>
       </div>
       <div class="info-msg">
         <p v-if="winning == 'You'">You're in the lead!</p>
@@ -56,6 +39,24 @@
           :disabled="state.last_depositor !== accounts[0].address"
         >Claim Prize</button>
       </div>
+    </div>
+
+    <!-- Game Data Display -->
+    <div class="game-data row">
+      <ul class="stats" v-if="state.last_depositor">
+        <!-- Game Active -->
+        <li v-if="!gameover">
+          <span>Leader:</span>&nbsp;
+          <a :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a>
+        </li>
+        <li><span>Prize Pool:</span> {{ prizeDisplay }}</li>
+        <!-- Gameover -->
+        <li v-if="gameover">
+          <h3 class="winner-display" v-if="winning == 'You'">{{ winning }} have won Fomo!</h3>
+          <h3 class="winner-display" v-else>{{ winning }} has won Fomo!</h3>
+          <p class="descr">Game will restart when the winner has claimed their prize</p>
+        </li>
+      </ul>
     </div>
 
     <!-- Tx Status Notifications -->
@@ -244,26 +245,45 @@ export default {
 <style scoped>
 .game {
   position: absolute;
-  top: 5em;
+  top: 2.25em;
   max-width: 678px;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
 }
+
 ul.stats {
   list-style: none;
 }
 
-.timer {
-  min-height: 250px;
+.timer div.timer-display {
   display: flex;
-  justify-content: center;
-  border-radius: 8px;
-  margin-bottom: 2em;
-  margin-left: 0.5em;
+  padding: 16px;
   flex-direction: column;
+  align-items: flex-start;
+  border-radius: 8px 8px 8px 0;
+  background: linear-gradient(0deg, rgba(255, 77, 0, 0.60) 0%, rgba(255, 77, 0, 0.60) 100%), #000;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
 }
 
-.timer .time-remaining {
+.timer div.time-remaining {
+  max-width: fit-content;
+  color: #FFFFFF;
   text-align: center;
-  font-size: 5em;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  display: flex;
+  padding: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 0  0 8px 8px;
+  background: linear-gradient(0deg, rgba(255, 77, 0, 0.60) 0%, rgba(255, 77, 0, 0.60) 100%), #000;
 }
 
 .tx-msg span {

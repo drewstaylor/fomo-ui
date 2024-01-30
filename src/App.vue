@@ -207,7 +207,7 @@ export default {
 
 <style scoped>
 .app {
-  max-width: 1440px;
+  max-width: 1640px;
   margin: auto;
   display: flex;
   align-items: flex-start;
@@ -282,6 +282,7 @@ li.nav-item {
   margin: 2em;
 }
 .btn-connect {
+  min-width: 220px;
   border-radius: 12px;
   border: 1px solid #FF4D00;
   background: #FF4D00;

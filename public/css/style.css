@@ -173,6 +173,28 @@ a:hover, a:active, a:focus {
     /* animation: play 15s linear infinite; */
 }
 
+
+.icon {
+    width: 18px;
+    height: 18px;
+    color: #000000;
+    margin-right: 8px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: inline-block;
+    position: relative;
+}
+
+.icon-lg {
+    width: 32px;
+    height: 32px;
+}
+
+.icon-denom {
+    background-image: url('/img/icon-denom.svg');
+    top: 5px;
+}
+
 @keyframes play {
 	0% {
 		transform: rotateX(45deg) translateY(-50%);

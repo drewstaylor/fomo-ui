@@ -16,11 +16,28 @@
     <!-- Game Active (Timer) -->
     <div class="gameplay" v-if="!gameover">
       <div class="timer" v-if="timer">
-        <div class="timer-display">{{timer}}</div>
+        <div class="timer-display">
+          <div class="col days">
+            <div class="value">{{timer.days}}</div>
+            <div class="label">Days</div>
+          </div>
+          <div class="col separator">:</div>
+          <div class="col hours">
+            <div class="value">{{timer.hours}}</div>
+            <div class="label">Hours</div>
+          </div>
+          <div class="col separator">:</div>
+          <div class="col minutes">
+            <div class="value">{{timer.minutes}}</div>
+            <div class="label">Minutes</div>
+          </div>
+          <div class="col separator">:</div>
+          <div class="col seconds">
+            <div class="value">{{timer.seconds}}</div>
+            <div class="label">Seconds</div>
+          </div>
+        </div>
         <div class="time-remaining">Time Remaining</div>
-      </div>
-      <div class="info-msg">
-        <p v-if="winning == 'You'">You're in the lead!</p>
       </div>
       <div class="controls" v-if="!readOnly">
         <button 
@@ -41,31 +58,33 @@
       </div>
     </div>
 
-    <!-- Game Data Display -->
-    <div class="game-data row">
-      <ul class="stats" v-if="state.last_depositor">
-        <!-- Game Active -->
-        <li v-if="!gameover">
-          <span>Leader:</span>&nbsp;
-          <a :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a>
-        </li>
-        <li><span>Prize Pool:</span> {{ prizeDisplay }}</li>
-        <!-- Gameover -->
-        <li v-if="gameover">
-          <h3 class="winner-display" v-if="winning == 'You'">{{ winning }} have won Fomo!</h3>
-          <h3 class="winner-display" v-else>{{ winning }} has won Fomo!</h3>
-          <p class="descr">Game will restart when the winner has claimed their prize</p>
-        </li>
-      </ul>
-    </div>
+    
+  </div>
 
-    <!-- Tx Status Notifications -->
-    <div class="tx-msg" v-if="status.notification">
-      <span class="close-x" @click="status = {notification: null, type: null}">&times;</span>
-      <div class="bg-info" v-if="status.type == 'info'">{{status.notification}}</div>
-      <div class="bg-success" v-if="status.type == 'success'">{{status.notification}}</div>
-      <div class="bg-danger" v-if="status.type == 'error'">{{status.notification}}</div>
+  <!-- Game Data Display -->
+  <div class="game-data row" v-if="state.expiration">
+    <div class="prize-display" v-if="state.last_depositor">
+      <div class="prize-value">{{prizeDisplay}}</div>
+      <div class="prize-denom">{{denom}}<span class="icon icon-lg icon-denom"></span></div>
     </div>
+    <hr class="ruled-line" />
+    <div class="controller" v-if="state.last_depositor">
+      <div class="label">Controller</div>
+      <div class="value" v-if="winning !== 'You'">
+        <a :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a>
+      </div>
+      <div class="value max-control" v-if="winning == 'You'">
+        <span>You're in control</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tx Status Notifications -->
+  <div class="tx-msg" v-if="status.notification">
+    <span class="close-x" @click="status = {notification: null, type: null}">&times;</span>
+    <div class="bg-info" v-if="status.type == 'info'">{{status.notification}}</div>
+    <div class="bg-success" v-if="status.type == 'success'">{{status.notification}}</div>
+    <div class="bg-danger" v-if="status.type == 'error'">{{status.notification}}</div>
   </div>
 </template>
 
@@ -119,18 +138,22 @@ export default {
       if (typeof this.state.expiration !== "number") return "";
       const targ = this.state.expiration * 1000;
       const difference = +new Date(targ) - +new Date();
-      let remaining = "";
+      let remaining = {};
       if (difference > 0) {
-        const parts = {
-            d: Math.floor(difference / (1000 * 60 * 60 * 24)),
-            h: Math.floor((difference / (1000 * 60 * 60)) % 24),
-            m: Math.floor((difference / 1000 / 60) % 60),
-            s: Math.floor((difference / 1000) % 60),
+        remaining = {
+            days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+            minutes: Math.floor((difference / 1000 / 60) % 60),
+            seconds: Math.floor((difference / 1000) % 60),
+            gameover: false
         };
-        remaining = Object.keys(parts).map(part => {
-          return `${parts[part]}${part}`;
-        }).join(" ");
-      } else remaining = "Game Over"
+      } else remaining = {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        gameover: true
+      }
       this.timer = remaining;
     },
     // Query fns
@@ -229,7 +252,8 @@ export default {
     prizeDisplay: function () {
       if (!this.prize) return "";
       if (!this.prize.amount || !this.prize.denom) return "";
-      return this.formatFromAtto(this.prize.amount) + ' ' + this.prize.denom.slice(1).toUpperCase();
+      let prize = this.formatFromAtto(this.prize.amount);
+      return prize.toLocaleString("en");
     },
     gameover: function () {
       if (typeof this.state.expiration !== "number") return null;
@@ -245,26 +269,39 @@ export default {
 <style scoped>
 .game {
   position: absolute;
-  top: 2.25em;
+  top: 2.5em;
   max-width: 678px;
-  margin-left: 0.25em;
-  margin-right: 0.25em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
 }
 
 ul.stats {
   list-style: none;
 }
 
-.timer div.timer-display {
+.timer-display {
   display: flex;
   padding: 16px;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-start;
   border-radius: 8px 8px 8px 0;
   background: linear-gradient(0deg, rgba(255, 77, 0, 0.60) 0%, rgba(255, 77, 0, 0.60) 100%), #000;
+}
+
+.timer-display .col .value,
+.separator {
   color: #FFFFFF;
   text-align: center;
   font-size: 64px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+}
+
+.timer-display .col .label {
+  color: rgba(255, 255, 255, 0.60);
+  text-align: center;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: 120%;
@@ -300,4 +337,74 @@ ul.stats {
   clear: both;
 }
 
+.row.game-data {
+  position: absolute;
+  top: 15.5em;
+  width: 45%;
+  max-width: 790px;
+  margin: auto;
+}
+
+.ruled-line {
+  text-align: center;
+  margin: auto;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  width: 75%;
+  color: rgba(255, 255, 255, 0.20);
+}
+
+.prize-display {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  margin: auto;
+}
+
+.prize-display .prize-value {
+  color: #FFFFFF;
+  font-size: 120px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 110%;
+  letter-spacing: -1.2px;
+}
+
+.prize-display .prize-denom {
+  color: #FFFFFF;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+}
+
+.icon-denom {
+  margin-left: 0.25em;
+}
+
+.controller {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 75%;
+  margin: auto;
+}
+
+.controller .label {
+  color: #FFFFFF;
+  text-align: left;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+.controller .value {
+  color: #FF4D00;
+  text-align: right;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
 </style>

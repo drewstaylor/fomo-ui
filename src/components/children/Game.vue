@@ -13,6 +13,8 @@
 
   <div class="game" v-if="state.expiration">
 
+    <div :class="{'grid-mask': true, 'orange': winning !== you, 'diamond': winning == you}"></div>
+
     <!-- Game Active (Timer) -->
     <div class="gameplay" v-if="!gameover">
       <div class="timer" v-if="timer">
@@ -69,12 +71,18 @@
     </div>
     <hr class="ruled-line" />
     <div class="controller" v-if="state.last_depositor">
-      <div class="label">Controller</div>
-      <div class="value" v-if="winning !== 'You'">
+      <div class="label">
+        <span v-if="!gameover">Controller</span>
+        <span v-else>Winner</span>
+      </div>
+      <div class="value" v-if="winning !== you">
         <a :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a>
       </div>
-      <div class="value max-control" v-if="winning == 'You'">
+      <div class="value max-control" v-if="winning == you && !gameover">
         <span>You're in control</span>
+      </div>
+      <div class="value max-control winner" v-if="winning == you && gameover">
+        <span>Congratulations, you won the Network Wars</span>
       </div>
     </div>
   </div>
@@ -113,6 +121,7 @@ export default {
     timer: null,
     profileLink: ARCHID_PROFILE_LINK_PREFIX,
     executeResult: null,
+    you: 'You',
     status: {
       notification: null,
       type: null,
@@ -178,7 +187,7 @@ export default {
       if (this.readOnly) {
         this.winning = await this.loadDomains(this.state.last_depositor);
       } else {
-        if (this.state.last_depositor == this.accounts[0].address) this.winning = "You";
+        if (this.state.last_depositor == this.accounts[0].address) this.winning = this.you;
         else this.winning = await this.loadDomains(this.state.last_depositor);
       }
     },
@@ -232,7 +241,7 @@ export default {
       if (typeof this.state.last_depositor !== "string") return "";
       if (!this.accounts.length) return this.state.last_depositor
       let leader = (this.state.last_depositor == this.accounts[0].address) 
-        ? "You" : this.state.last_depositor;
+        ? this.you : this.state.last_depositor;
       return leader;
     },
     gameWinner: function () {
@@ -274,11 +283,6 @@ export default {
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
-
-ul.stats {
-  list-style: none;
-}
-
 .timer-display {
   display: flex;
   padding: 16px;
@@ -287,7 +291,6 @@ ul.stats {
   border-radius: 8px 8px 8px 0;
   background: linear-gradient(0deg, rgba(255, 77, 0, 0.60) 0%, rgba(255, 77, 0, 0.60) 100%), #000;
 }
-
 .timer-display .col .value,
 .separator {
   color: #FFFFFF;
@@ -297,7 +300,6 @@ ul.stats {
   font-weight: 400;
   line-height: 120%;
 }
-
 .timer-display .col .label {
   color: rgba(255, 255, 255, 0.60);
   text-align: center;
@@ -306,7 +308,6 @@ ul.stats {
   font-weight: 400;
   line-height: 120%;
 }
-
 .timer div.time-remaining {
   max-width: fit-content;
   color: #FFFFFF;
@@ -322,7 +323,6 @@ ul.stats {
   border-radius: 0  0 8px 8px;
   background: linear-gradient(0deg, rgba(255, 77, 0, 0.60) 0%, rgba(255, 77, 0, 0.60) 100%), #000;
 }
-
 .tx-msg span {
   float: right;
   cursor: pointer;
@@ -330,13 +330,11 @@ ul.stats {
   top: 1.5em;
   right: 0.5em;
 }
-
 .tx-msg div {
   padding: 0.25em;
   border-radius: 8px;
   clear: both;
 }
-
 .row.game-data {
   position: absolute;
   top: 15.5em;
@@ -344,7 +342,6 @@ ul.stats {
   max-width: 790px;
   margin: auto;
 }
-
 .ruled-line {
   text-align: center;
   margin: auto;
@@ -353,14 +350,12 @@ ul.stats {
   width: 75%;
   color: rgba(255, 255, 255, 0.20);
 }
-
 .prize-display {
   display: flex;
   flex-direction: column;
   width: 75%;
   margin: auto;
 }
-
 .prize-display .prize-value {
   color: #FFFFFF;
   font-size: 120px;
@@ -369,7 +364,6 @@ ul.stats {
   line-height: 110%;
   letter-spacing: -1.2px;
 }
-
 .prize-display .prize-denom {
   color: #FFFFFF;
   font-size: 28px;
@@ -377,11 +371,9 @@ ul.stats {
   font-weight: 500;
   line-height: 150%;
 }
-
 .icon-denom {
   margin-left: 0.25em;
 }
-
 .controller {
   display: flex;
   justify-content: space-between;
@@ -389,7 +381,6 @@ ul.stats {
   width: 75%;
   margin: auto;
 }
-
 .controller .label {
   color: #FFFFFF;
   text-align: left;
@@ -398,7 +389,6 @@ ul.stats {
   font-weight: 400;
   line-height: 150%;
 }
-
 .controller .value {
   color: #FF4D00;
   text-align: right;

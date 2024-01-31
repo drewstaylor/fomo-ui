@@ -14,42 +14,16 @@
             <span class="brand brand-2">Wars</span>
           </div>
           <div class="col right fade-web-right"></div>
+          <div class="info rules cursor-pointer" @click="welcomeModal();">
+            <span class="icon icon-info"></span>
+          </div>
         </div>
       </div>
       <div class="get-connected">
-        <button class="btn btn-connect btn-primary">Connect</button>
+        <button class="btn btn-connect btn-primary" @click="walletModal();">Connect</button>
       </div>
       <div class="connected" v-if="connected">
-        <!-- Not Logged In -->
         <ul>
-          <!-- <li class="wallet-choice nav-item" v-if="!connected">
-            <button 
-              class="btn btn-inverse nav-link dropdown-toggle" 
-              role="button" 
-              data-bs-toggle="dropdown" 
-              aria-expanded="false"
-            >Connect</button>
-            <ul class="wallet-connect row dropdown-menu nav-item dropdown">
-              <li 
-                id="connect_keplr" 
-                class="btn-connect btn-keplr dropdown-item" 
-                @click="connectWallet('keplr');"
-              ><span class="icon icon-keplr"></span>Keplr</li>
-              <li 
-                id="connect_cosmostation" 
-                class="btn-connect btn-cosmostation dropdown-item" 
-                @click="connectWallet('cosmostation');"
-              ><span class="icon icon-cosmostation"></span>Cosmostation</li>
-              <li 
-                id="connect_leap" 
-                class="btn-connect btn-leap dropdown-item" 
-                @click="connectWallet('leap');"
-              ><span class="icon icon-leap"></span>Leap</li>
-            </ul>
-          </li> -->
-        
-
-          <!-- Logged In -->
           <li class="pfp nav-item" v-if="player.avatar">
             <div 
               class="img avatar" 
@@ -80,11 +54,35 @@
       </div>
     </div>
   </div>
+
+  <!-- Connect -->
+  <Modal
+    v-bind:name="'wallet-select'"
+    v-bind:footer="true"
+    v-bind:showModal="showModal.connect"
+    @close="walletModal"
+    @button="connectHandler"
+  >
+  </Modal>
+
+  <!-- Welcome -->
+  <Modal
+    v-bind:name="'welcome'"
+    v-bind:footer="!connected"
+    v-bind:showModal="showModal.welcome"
+    v-bind:state="state"
+    @close="welcomeModal"
+    @button="selectWalletHandler"
+    v-if="showModal.welcome && state.min_deposit"
+  ></Modal>
 </template>
 
 <script>
 import { Client, Accounts } from './util/client';
 import { FromAtto } from './util/denom';
+import { Query } from './util/contract';
+
+import Modal from './components/children/Modal.vue';
 
 const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
 const DefaultAvatar = "/img/token.svg";
@@ -99,6 +97,7 @@ export default {
     accounts: [],
     connected: false,
     connecting: false,
+    state: {},
     player: {
       id: null,
       avatar: null,
@@ -110,15 +109,21 @@ export default {
     denom: (IsTestnet) ? "CONST" : "ARCH",
     profileLink: ARCHID_PROFILE_LINK_PREFIX,
     formatFromAtto: FromAtto,
+    showModal: {
+      welcome: false,
+      connect: false,
+    },
   }),
+  components: { Modal },
   mounted: async function () {
     if (window) {
       let connected = window.sessionStorage.getItem('connected');
       if (connected) {
-        this.resumeConnectedState();
+        await this.resumeConnectedState();
         this.trySetPlayer();
+        this.trySetState();
         this.connected = true;
-      }
+      } else await this.trySetState();
     }
   },
   methods: {
@@ -155,6 +160,15 @@ export default {
         await this.resumeConnectedState((attempts + 1));
       }
     },
+    connectHandler: function (type) {
+      console.log('connectHandler', type);
+      this.connectWallet(type);
+    },
+    selectWalletHandler: function () {
+      console.log('selectWalletHandler');
+      this.showModal.welcome = false;
+      this.showModal.connect = true;
+    },
     logout: function () {
       try {
         window.sessionStorage.removeItem('connected');
@@ -168,6 +182,16 @@ export default {
         let player = window.localStorage.getItem('player');
         if (player) this.player = JSON.parse(player);
       }
+    },
+    trySetState: async function () {
+      let client = (this.cwClient) ? this.cwClient : await Client('offline');
+      this.state = await Query.Game(client);
+    },
+    welcomeModal: function () {
+      this.showModal.welcome = !this.showModal.welcome;
+    },
+    walletModal: function () {
+      this.showModal.connect = !this.showModal.connect;
     },
     resolveUpdates: async function () {
       try {
@@ -258,6 +282,7 @@ li.nav-item {
 }
 .navbar-brand {
   height: 150px;
+  min-width: 400px;
   border-radius: 16px;
   border: 1px solid #FF4D00;
   background: rgba(255, 77, 0, 0.20);
@@ -265,6 +290,18 @@ li.nav-item {
   flex: 1 0 0;
   padding: 0.5em;
   overflow: hidden;
+}
+.info.rules {
+  width: 48px;
+  height: 48px;
+  padding-top: 7px;
+  border-radius: 8px;
+  border: 1px solid #FF4D00;
+  background: linear-gradient(0deg, rgba(255, 77, 0, 0.30) 0%, rgba(255, 77, 0, 0.30) 100%), #000000;
+  box-shadow: 3px 9px 32px -4px rgba(0, 0, 0, 0.07);
+  position: relative;
+  right: 0.5em;
+  top: 3.25em;
 }
 .col.left.raised {
   z-index: 100;

@@ -100,6 +100,7 @@
 import { TokensOf } from '../../util/archid';
 import { Query, Execute } from '../../util/contract';
 import { FromAtto } from '../../util/denom';
+import { Client } from '../../util/client';
 
 const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
 const ARCHID_PROFILE_LINK_PREFIX = (IsTestnet) ? "https://test.archid.app/address/" : "https://archid.app/address/";
@@ -179,7 +180,7 @@ export default {
       return query.tokens[0];
     },
     loadPrizePool: async function () {
-      let client = (this.readOnly) ? this.readOnlyClient : this.cwClient;
+      let client = (this.readOnly) ? await Client('offline') : this.cwClient;
       this.prize = await this.fomo.Query.PrizePool(client);
     },
     loadWinning: async function () {

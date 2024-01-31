@@ -1,12 +1,34 @@
 <template>
   <transition name="modal">
     <div :id="'wrapper-'+name" class="modal-wrapper" v-if="showModal" @click="close();">
-      <div :id="'modal-'+name" class="modal">
-        <div :id="'header-'+name" class="modal-header">
-        </div>
-        <div :id="'body-'+name" class="modal-body">
-        </div>
-        <div :id="'footer-'+name" class="modal-footer" v-if="footer">
+      <div :id="'modal-'+name" class="modalt">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+
+            <div :id="'header-'+name" class="modal-header">
+              <div class="title modal-title" v-if="content.header.title" v-html="content.header.title"></div>
+              <div class="subtitle" v-if="content.header.subtitle" v-html="content.header.subtitle"></div>
+            </div>
+            
+            <div :id="'body-'+name" class="modal-body" v-if="content.body.text.length">
+              <p class="descr" v-for="(content, i) in content.body.text" :key="i+'-body'">{{content}}</p>
+            </div>
+            
+            <div :id="'footer-'+name" class="modal-footer" v-if="footer">
+              <div class="controls" v-if="content.footer.buttons.length">
+                <ul class="list-none">
+                  <li class="list-none" v-for="(button, i) in content.footer.buttons" :key="i+'-footer'">
+                    <button 
+                      :class="'btn btn-secondary ' + name" 
+                      v-html="button.value" 
+                      @click="emitButton(button.name);"
+                    ></button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
@@ -25,7 +47,7 @@ export default {
     state: Object,
     msg: Object,
   },
-  emits: ['selectedWallet', 'close'],
+  emits: ['button', 'close'],
   data: () => ({
     content: {
       header: { title: null, subtitle: null },
@@ -38,7 +60,7 @@ export default {
   mounted: async function () {
     switch(this.name) {
       case 'welcome': {
-        if (!this.state['min_deposit']) console.warn('Error resolve game state');
+        if (!this.state['min_deposit']) console.warn('Error resolving game state', this.state);
         this.content.header.title = 'Welcome to';
         this.content.header.subtitle = '<span class="brand brand-1">Network</span><span class="brand brand-2">Wars</span>';
         this.content.body.text = [
@@ -46,16 +68,16 @@ export default {
           'To control the network, users must pay '+ FromAtto(this.state.min_deposit) + ' ' + this.denom +'. Every time there is a new controller, '+ FromAtto(this.state.min_deposit) + ' ' + this.denom +' is added to the prize pool, and '+ this.secondsToMinutes(this.state.extensions) +' added to the countdown.',
           'Good Luck.'
         ];
-        this.content.footer.buttons = ['Start Playing'];
+        this.content.footer.buttons = [{name: 'welcome', value: 'Start Playing'}];
         break;
       }
       case 'wallet-select': {
         this.content.header.title = 'Select a Wallet';
         this.content.body.text = ['Select from the supported wallets to get started.'];
         this.content.footer.buttons = [
-          '<span class="icon icon-keplr"></span>Keplr',
-          '<span class="icon icon-cosmostation"></span>Cosmostation',
-          '<span class="icon icon-leap"></span>Leap'
+          {name: 'keplr', value: '<span class="icon icon-keplr"></span>Keplr'},
+          {name: 'cosmostation', value: '<span class="icon icon-cosmostation"></span>Cosmostation'},
+          {name: 'leap', value: '<span class="icon icon-leap"></span>Leap'}
         ];
         break;
       }
@@ -82,15 +104,17 @@ export default {
         this.content.header.subtitle = 'You need an ArchID to play.';
         this.content.body.text = ['Looks like there are no ArchIDs associated with this wallet.'];
         this.content.footer.buttons = [
-          'Get Your ArchID<span class="icon icon-external-link"></span>',
-          '<span class="icon icon-logout"></span>Logout'
+          {name: 'get_archid', value: 'Get Your ArchID<span class="icon icon-external-link"></span>'},
+          {name: 'logout', value: '<span class="icon icon-logout"></span>Logout'}
         ];
         break;
       }
       case 'archid-select': {
         this.content.header.subtitle = 'Select Your ArchID';
         this.content.body.text = ['Select the name that you would like to use for this game.'];
-        this.content.footer.buttons = this.msg;
+        this.msg.forEach((domain) => {
+          this.content.footer.buttons.push({name: 'select_archid', value: domain});
+        });
         break;
       }
       case 'deposit': {
@@ -120,10 +144,13 @@ export default {
     close: function () {
       this.$emit('close', this.showModal);
     },
+    emitButton: function (name) {
+      this.$emit('button', name);
+    },
     secondsToMinutes(seconds) {
       if (typeof seconds !== 'number') return '';
       else if (seconds <= 1) return '';
-      else if (seconds < 60) = return seconds + ' seconds are';
+      else if (seconds < 60) return seconds + ' seconds are';
       let minutes = parseInt(seconds / 60);
       if (minutes == 1) return '1 minute is';
       else return minutes + ' minutes are';
@@ -133,4 +160,23 @@ export default {
 </script>
 
 <style scoped>
+div.subtitle {
+  margin-top: 16px;
+}
+.controls {
+  width: 100%;
+}
+.controls ul, .controls ul li {
+  padding: 0;
+  width: 100%;
+}
+.controls ul li {
+  margin-bottom: 0.5em;
+}
+li .btn.wallet-select {
+  text-align: left;
+}
+.btn.wallet-select span {
+  margin-right: 1em;
+}
 </style>

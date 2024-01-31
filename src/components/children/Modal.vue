@@ -1,6 +1,6 @@
 <template>
   <transition name="modal">
-    <div :id="'wrapper-'+name" class="modal-wrapper" v-if="showModal" @click="close();">
+    <div :id="'wrapper-'+name" class="modal-wrapper" v-if="showModal" @click="close">
       <div :id="'modal-'+name" class="modalt">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -141,7 +141,8 @@ export default {
     }
   },
   methods: {
-    close: function () {
+    close: function (event) {
+      if (event.target.classList[0] !== 'modal-wrapper') return;
       this.$emit('close', this.showModal);
     },
     emitButton: function (name) {

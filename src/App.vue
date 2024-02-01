@@ -37,7 +37,7 @@
           </div>
           <div class="col right">
             <div 
-              class="img avatar" 
+              :class="{'img' :true, 'avatar': true, 'default': avatar == defaultAvatar}" 
               :style="'background-image: url('+ avatar +');'"
             ></div>
           </div>
@@ -108,6 +108,7 @@ export default {
       id: null,
       avatar: null,
     },
+    defaultAvatar: DefaultAvatar,
     archIdMintLink: (IsTestnet) ? "https://test.archid.app" : "https://archid.app",
     walletTypes: ['keplr', 'cosmostation', 'leap'],
     walletType: null,
@@ -176,7 +177,6 @@ export default {
       this.showModal.connect = true;
     },
     selectPlayerHandler: function (player) {
-      console.log('selectPlayerHandler', player);
       if (player.id) this.player = player;
       this.showModal.id = false;
     },
@@ -206,7 +206,6 @@ export default {
     },
     playerModal: function () {
       this.showModal.id = !this.showModal.id;
-      console.log('playerModal', this.showModal);
     },
     resolveUpdates: async function () {
       try {
@@ -230,7 +229,7 @@ export default {
   },
   computed: {
     avatar: function () {
-      if (!this.player.avatar) return DefaultAvatar;
+      if (!this.player.avatar) return DefaultAvatar
       let img = (this.player.avatar.substr(0,7) == IPFS_CID_PREFIX) 
         ? this.player.avatar.replace(IPFS_CID_PREFIX, IPFS_GATEWAY_PREFIX) : this.player.avatar;
       return img;
@@ -301,7 +300,12 @@ li.nav-item {
   border-radius: 96px;
   width: 96px;
   height: 96px;
+  top: 8px;
   flex-shrink: 0;
+}
+.img.avatar.default {
+  background-color: transparent;
+  border-radius: unset;
 }
 .row.sub {
   margin: 0;

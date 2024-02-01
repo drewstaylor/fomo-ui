@@ -22,35 +22,27 @@
       <div class="get-connected" v-if="!connected">
         <button class="btn btn-connect btn-primary" @click="walletModal();">Connect</button>
       </div>
-      <div class="connected" v-if="connected">
-        <ul>
-          <li class="pfp nav-item" v-if="player.avatar">
+      <div class="connected player-display" v-if="connected && player.id">
+        <div class="row player-row">
+          <div class="col left">
+            <button class="btn btn-secondary player-id">{{player.id}}</button>
+            <div class="row sub">
+              <div class="col sub">
+                <button class="btn btn-tertiary change-id" @click="playerModal();">Change</button>
+                <button class="btn btn-tertiary logout" @click="logout();">
+                  <span class="icon icon-logout"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col right">
             <div 
               class="img avatar" 
               :style="'background-image: url('+ avatar +');'"
             ></div>
-          </li>
-          <li class="nav-item greeting" v-if="!player.id && connected">
-            <p>Greetings {{ displayName }}</p>
-            <p>Claim your <a :href="archIdMintLink" target="_blank">ArchID</a> to participate in Fomo!</p>
-          </li>
-          <li class="nav-item greeting" v-if="player.id && connected">
-            <p>Welcome back <a :href="profileLink + player.id" target="_blank">{{ displayName }}</a></p>
-            <p>Ready to fomo?</p>
-          </li>
-          <li 
-            class="balance nav-item" 
-            v-if="connected && player.id"
-            :alt="formatFromAtto(accounts[0].balance.amount) + ' ' + denom" 
-            :title="formatFromAtto(accounts[0].balance.amount) + ' ' + denom"
-          >
-            <p>You have</p>
-            <p>{{balanceDisplayFormat(accounts[0].balance.amount)}} {{ denom }}</p>
-          </li>
-        </ul>
-        <div class="logout" v-if="connected">
-          <button class="btn btn-inverse" @click="logout();">Logout</button>
+          </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -192,6 +184,9 @@ export default {
     walletModal: function () {
       this.showModal.connect = !this.showModal.connect;
     },
+    playerModal: function () {
+      console.log("XXX TODO: this");
+    },
     resolveUpdates: async function () {
       try {
         let accounts = await Accounts(this.cwClient);
@@ -264,15 +259,54 @@ export default {
 li.nav-item {
   margin: 2em;
 }
+.connected.player-display {
+  display: flex;
+  padding: 0px 16px 0px 8px;
+  justify-content: space-around;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: 16px;
+  border: 1px solid #FF4D00;
+  background: rgba(255, 77, 0, 0.20);
+}
 .img.avatar {
-  width: 120px;
-  height: 120px;
   background-size: contain;
-  background-color: #FFFFFF;
+  background-color: rgba(255, 77, 0, 0.20);
   background-position: center center;
   background-repeat: no-repeat;
   position: relative;
-  border: 1px solid #000000;
+  border-radius: 96px;
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+}
+.row.sub {
+  margin: 0;
+}
+.row.sub, .col.sub {
+  padding: 0;
+}
+.col.sub {
+  display: inline-flex;
+  position: relative;
+  top: 8px;
+}
+.btn.player-id, .btn.change-id {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
+.btn.player-id {
+  width: 100%;
+  height: 64px;
+  cursor: default;
+}
+.btn.change-id {
+  margin-right: 8px;
+  width: 75%;
 }
 .navbar {
   max-width: 50%;
@@ -307,7 +341,7 @@ li.nav-item {
 .col.left.raised {
   z-index: 100;
 }
-.navbar, .img.avatar {
+.navbar {
   border-radius: 8px;
 }
 .navbar-collapse, .navbar {
@@ -315,9 +349,6 @@ li.nav-item {
 }
 .page-content {
   margin-top: 2em;
-}
-.logout {
-  margin: 2em;
 }
 .btn-connect {
   min-width: 220px;

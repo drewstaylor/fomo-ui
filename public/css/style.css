@@ -104,6 +104,13 @@ a:hover, a:active, a:focus {
   box-shadow: 3px 9px 32px -4px rgba(0, 0, 0, 0.07) !important;
   color: #FFFFFF;
 }
+.btn-tertiary, .btn-tertiary:hover, .btn-tertiary:focus, .btn-tertiary:active {
+  border-radius: 4px !important;
+  border: 1px solid #FF4D00 !important;
+  background: rgba(255, 77, 0, 0.30) !important;
+  box-shadow: 3px 9px 32px -4px rgba(0, 0, 0, 0.07) !important;
+  color: #FFFFFF;
+}
 
 .game, .grid-container, .grid-mask, .page-content.col.left,
 .page-content.col.left .home.page {
@@ -287,6 +294,11 @@ a:hover, a:active, a:focus {
   width: 24px;
   height: 24px;
   background-image: url('/img/icon-leap.svg');
+}
+.icon-logout {
+  top: 1px;
+  left: 5px;
+  background-image: url('/img/icon-logout.svg');
 }
 
 @keyframes play {

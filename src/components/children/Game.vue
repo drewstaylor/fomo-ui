@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <div :class="{'game': true, 'diamond': winning == you}" v-if="state.expiration">
+  <div :class="{'game': true, 'orange': !readOnly}" v-if="state.expiration">
 
     <div :class="{'grid-mask': true, 'orange': winning !== you, 'diamond': winning == you}"></div>
 
@@ -85,6 +85,7 @@
           class="btn btn-inverse" 
           @click="claim();"
           :disabled="state.last_depositor !== accounts[0].address"
+          v-if="state.last_depositor == accounts[0].address"
         >Claim Prize</button>
       </div>
     </div>
@@ -324,7 +325,7 @@ export default {
   border-radius: 16px;
   max-width: 50%;
 }
-.game.diamond {
+.game.orange {
   background: rgba(255, 77, 0, 0.15);
 }
 .gameplay {

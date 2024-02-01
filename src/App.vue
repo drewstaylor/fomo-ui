@@ -19,7 +19,7 @@
           </div>
         </div>
       </div>
-      <div class="get-connected">
+      <div class="get-connected" v-if="!connected">
         <button class="btn btn-connect btn-primary" @click="walletModal();">Connect</button>
       </div>
       <div class="connected" v-if="connected">

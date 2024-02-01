@@ -22,6 +22,13 @@
                       :class="'btn btn-secondary ' + name" 
                       v-html="button.value" 
                       @click="emitButton(button.name);"
+                      v-if="name !== 'archid-select'"
+                    ></button>
+                    <button 
+                      :class="'btn btn-secondary ' + name" 
+                      v-html="button.value" 
+                      @click="selectDomain(button.value)"
+                      v-if="name == 'archid-select'"
                     ></button>
                   </li>
                 </ul>
@@ -37,7 +44,10 @@
 
 <script>
 import { FromAtto } from '../../util/denom';
+import { Token } from '../../util/archid';
+
 const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
+const DefaultAvatar = "/img/token.svg";
 
 export default {
   props: {
@@ -47,7 +57,7 @@ export default {
     state: Object,
     msg: Object,
   },
-  emits: ['button', 'close'],
+  emits: ['button', 'close', 'setPlayer'],
   data: () => ({
     content: {
       header: { title: null, subtitle: null },
@@ -110,10 +120,10 @@ export default {
         break;
       }
       case 'archid-select': {
-        this.content.header.subtitle = 'Select Your ArchID';
-        this.content.body.text = ['Select the name that you would like to use for this game.'];
+        this.content.header.subtitle = 'Select ArchID';
+        this.content.body.text = ['Select a player name to use for this game'];
         this.msg.forEach((domain) => {
-          this.content.footer.buttons.push({name: 'select_archid', value: domain});
+          this.content.footer.buttons.push({name: 'archid-select', value: domain});
         });
         break;
       }
@@ -145,7 +155,18 @@ export default {
       if (event.target.classList[0] !== 'modal-wrapper') return;
       this.$emit('close', this.showModal);
     },
-    emitButton: function (name) {
+    selectDomain: async function (archid) {
+      let domain = await Token(archid, this.cw721, this.cwClient);
+      if (typeof domain !== "object") return;
+      if (!domain.extension) return;
+      let player = {
+        id: domain.extension.domain,
+        avatar: (domain.extension.image) ? domain.extension.image : DefaultAvatar,
+      };
+      this.$emit('setPlayer', player);
+      this.emitButton(this.name);
+    },
+    emitButton: async function (name) {
       this.$emit('button', name);
     },
     secondsToMinutes(seconds) {
@@ -179,5 +200,12 @@ li .btn.wallet-select {
 }
 .btn.wallet-select span {
   margin-right: 1em;
+}
+#modal-archid-select {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 </style>

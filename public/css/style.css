@@ -206,6 +206,8 @@ a:hover, a:active, a:focus {
   box-shadow: -8px 0px 124px rgba(0, 0, 0, 0.08);
   border-radius: 16px;
   border: 1px solid var(--Orange-500, #FF4D00);
+  max-height: 75vh;
+  overflow-y: auto;
 }
 .modalt, .modal-body, .modal-header, .modal-footer {
   background: linear-gradient(0deg, rgba(255, 77, 0, 0.20) 0%, rgba(255, 77, 0, 0.20) 100%), #000;

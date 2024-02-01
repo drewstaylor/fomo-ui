@@ -67,6 +67,19 @@
     @button="selectWalletHandler"
     v-if="showModal.welcome && state.min_deposit"
   ></Modal>
+
+  <!-- Change Player -->
+  <Modal
+    v-bind:name="'archid-select'"
+    v-bind:footer="true"
+    v-bind:showModal="showModal.id"
+    v-bind:msg="domains"
+    @close="playerModal"
+    @setPlayer="selectPlayerHandler"
+    v-if="showModal.id && domains.length"
+  >
+  </Modal>
+
 </template>
 
 <script>
@@ -90,6 +103,7 @@ export default {
     connected: false,
     connecting: false,
     state: {},
+    domains: [],
     player: {
       id: null,
       avatar: null,
@@ -104,6 +118,7 @@ export default {
     showModal: {
       welcome: false,
       connect: false,
+      id: false,
     },
   }),
   components: { Modal },
@@ -160,6 +175,11 @@ export default {
       this.showModal.welcome = false;
       this.showModal.connect = true;
     },
+    selectPlayerHandler: function (player) {
+      console.log('selectPlayerHandler', player);
+      if (player.id) this.player = player;
+      this.showModal.id = false;
+    },
     logout: function () {
       try {
         window.sessionStorage.removeItem('connected');
@@ -185,7 +205,8 @@ export default {
       this.showModal.connect = !this.showModal.connect;
     },
     playerModal: function () {
-      console.log("XXX TODO: this");
+      this.showModal.id = !this.showModal.id;
+      console.log('playerModal', this.showModal);
     },
     resolveUpdates: async function () {
       try {

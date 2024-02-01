@@ -88,6 +88,7 @@ export default {
         id: domain.extension.domain,
         avatar: (domain.extension.image) ? domain.extension.image : DefaultAvatar,
       };
+      this.$root.domains = this.tokens;
       this.$emit('setPlayer', player);
     },
     logout: function () {

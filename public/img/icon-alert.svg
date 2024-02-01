@@ -1,0 +1,10 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="small/alert-octagon" clip-path="url(#clip0_3416_3899)">
+<path id="Vector" d="M12 7.49999V12M12 16.5H12.01M7.653 1.5H16.347L22.5 7.653V16.347L16.347 22.5H7.653L1.5 16.347V7.653L7.653 1.5Z" stroke="#FF4D00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3416_3899">
+<rect width="24" height="24" fill="white"/>
+</clipPath>
+</defs>
+</svg>

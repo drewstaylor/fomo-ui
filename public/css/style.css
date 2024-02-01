@@ -300,6 +300,14 @@ a:hover, a:active, a:focus {
   left: 5px;
   background-image: url('/img/icon-logout.svg');
 }
+.icon-external-link {
+  left: 4px;
+  top: 3px;
+  background-image: url('/img/icon-external-link.svg');
+}
+.icon-alert {
+  background-image: url('/img/icon-alert.svg');
+}
 
 @keyframes play {
   0% {

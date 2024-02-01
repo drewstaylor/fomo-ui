@@ -1,17 +1,30 @@
 <template>
   <div class="player-id-select" v-if="!loading">
     <div v-if="tokens.length">
-      <p>Select an ArchID to use for this game</p>
+      <h3 class="title">Select ArchID</h3>
+      <p class="descr">Select a player name to use for this game</p>
       <ul class="token-list">
         <li v-for="tokenId in tokens" :key="tokenId">
-          <a class="cursor-pointer" @click="selectDomain(tokenId);">{{tokenId}}</a>
+          <button class="btn btn-secondary btn-archid" @click="selectDomain(tokenId);">{{tokenId}}</button>
         </li>
       </ul>
     </div>
     <div v-else>
-      <p>Fomo requires an ArchID domain to play. Visit <a :href="archIdMintLink" target="_blank">{{mintLinkDisplay}}</a> to claim yours today!</p>
-      <p>Still Fomo-ing? You can watch the game in read only mode.</p>
-      <button class="btn btn-primary" @click="startWatching();">Start Watching</button>
+      <div class="warn">
+        <span class="icon icon-lg icon-alert"></span>
+      </div>
+      <h3 class="title">You need an ArchID to play</h3>
+      <p class="descr">Looks like there are no ArchIDs associated with this wallet</p>
+      <ul class="option-list">
+        <li>
+          <a :href="archIdMintLink" target="_blank">
+            <button class="btn btn-secondary btn-archid">Get an ArchID<span class="icon icon-external-link"></span></button>
+          </a>
+        </li>
+        <li>
+          <button class="btn btn-secondary btn-archid" @click="logout();">Logout<span class="icon icon-logout"></span></button>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -77,6 +90,14 @@ export default {
       };
       this.$emit('setPlayer', player);
     },
+    logout: function () {
+      try {
+        window.sessionStorage.removeItem('connected');
+        window.location.reload();
+      } catch (e) {
+        console.error(e);
+      }
+    },
     startWatching: function () {
       this.$emit('watchGame', true);
     }
@@ -92,8 +113,42 @@ export default {
 </script>
 
 <style scoped>
-ul.token-list, ul.token-list li {
+.player-id-select {
+  padding: 1em;
+  background: linear-gradient(0deg, rgba(255, 77, 0, 0.20) 0%, rgba(255, 77, 0, 0.20) 100%), #000;
+  color: #FFFFFF;
+}
+h3.title {
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  letter-spacing: -0.32px;
+}
+p.descr {
+  color: rgba(255, 255, 255, 0.60);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  letter-spacing: -0.16px;
+}
+ul.token-list, ul.token-list li, ul.option-list, ul.option-list li {
   list-style: none;
   padding-left: 0;
+}
+.btn-archid {
+  text-align: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  letter-spacing: -0.16px;
+  margin-bottom: 0.5em;
+  width: 100%;
+}
+.icon-logout {
+  top: 3px;
+  margin-left: 0.4px;
 }
 </style>

@@ -161,11 +161,10 @@ export default {
       }
     },
     connectHandler: function (type) {
-      console.log('connectHandler', type);
       this.connectWallet(type);
+      this.showModal.connect = false;
     },
     selectWalletHandler: function () {
-      console.log('selectWalletHandler');
       this.showModal.welcome = false;
       this.showModal.connect = true;
     },
@@ -239,17 +238,19 @@ export default {
   padding-top: 2em;
   padding-bottom: 2em;
 }
-.page-content.col.left, .navbar.col.right {
+.navbar.col.right {
   max-width: 50%;
   margin: 0;
   padding: 0;
+  position: relative;
+  left: -15px;
 }
 .page-content.col.left {
   border-radius: 16px;
   border: 1px solid #FF4D00;
   margin: -1px;
-  margin-right: 1em;
-  max-height: 855px;
+  margin-right: 34px;
+  max-height: 90vh;
   overflow: hidden;
   padding: 0;
 }

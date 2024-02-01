@@ -11,14 +11,14 @@
     </div>
   </div>
 
-  <div class="game" v-if="state.expiration">
+  <div :class="{'game': true, 'diamond': winning == you}" v-if="state.expiration">
 
     <div :class="{'grid-mask': true, 'orange': winning !== you, 'diamond': winning == you}"></div>
 
     <!-- Game Active (Timer) -->
     <div class="gameplay" v-if="!gameover">
       <div class="timer" v-if="timer">
-        <div class="timer-display">
+        <div :class="{'timer-display': true, 'orange': winning == you}">
           <div class="col days">
             <div class="value">{{timer.days}}</div>
             <div class="label">Days</div>
@@ -39,8 +39,38 @@
             <div class="label">Seconds</div>
           </div>
         </div>
-        <div class="time-remaining">Time Remaining</div>
+        <div :class="{'time-remaining': true, 'orange': winning == you}">Time Remaining</div>
       </div>
+    </div>
+    <div class="gameplay" v-else>
+      <div class="timer" v-if="timer">
+        <div :class="{'timer-display': true, 'orange': winning == you}">
+          <div class="col days">
+            <div class="value">00</div>
+            <div class="label">Days</div>
+          </div>
+          <div class="col separator">:</div>
+          <div class="col hours">
+            <div class="value">00</div>
+            <div class="label">Hours</div>
+          </div>
+          <div class="col separator">:</div>
+          <div class="col minutes">
+            <div class="value">00</div>
+            <div class="label">Minutes</div>
+          </div>
+          <div class="col separator">:</div>
+          <div class="col seconds">
+            <div class="value">00</div>
+            <div class="label">Seconds</div>
+          </div>
+        </div>
+        <div :class="{'time-remaining': true, 'orange': winning == you}">Time Remaining</div>
+      </div>
+    </div>
+
+    <!-- Deposit -->
+    <div class="controls-main active-game" v-if="!gameover">
       <div class="controls" v-if="!readOnly">
         <button 
           class="btn btn-primary"
@@ -48,12 +78,11 @@
         >Deposit</button>
       </div>
     </div>
-
     <!-- Gameover -->
-    <div class="gameover row" v-if="gameover && accounts && state.last_depositor">
+    <div class="controls-main gameover" v-if="gameover && accounts && state.last_depositor">
       <div class="controls" v-if="accounts.length && !readOnly">
         <button 
-          class="btn btn-primary" 
+          class="btn btn-inverse" 
           @click="claim();"
           :disabled="state.last_depositor !== accounts[0].address"
         >Claim Prize</button>
@@ -73,16 +102,19 @@
     <div class="controller" v-if="state.last_depositor">
       <div class="label">
         <span v-if="!gameover">Controller</span>
-        <span v-else>Winner</span>
       </div>
-      <div class="value" v-if="winning !== you">
+      <div class="value" v-if="winning !== you && !gameover">
         <a :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a>
       </div>
       <div class="value max-control" v-if="winning == you && !gameover">
         <span>You're in control</span>
       </div>
       <div class="value max-control winner" v-if="winning == you && gameover">
-        <span>Congratulations, you won the Network Wars</span>
+        <span>Congratulations, you won the Network Wars. Game will reset when you claim the prize.</span>
+      </div>
+      <div class="value max-control winner" v-if="winning !== you && gameover">
+        <a :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a>
+        <span> has won the Network Wars. Game will reset when they claim the prize.</span>
       </div>
     </div>
   </div>
@@ -164,7 +196,14 @@ export default {
         seconds: 0,
         gameover: true
       }
-      this.timer = remaining;
+      let timerOutput = {
+        days: (remaining.days < 10) ? '0' + remaining.days : String(remaining.days),
+        hours: (remaining.hours < 10) ? '0' + remaining.hours : String(remaining.hours),
+        minutes: (remaining.minutes < 10) ? '0' + remaining.minutes : String(remaining.minutes),
+        seconds: (remaining.seconds < 10) ? '0' + remaining.seconds : String(remaining.seconds),
+        gameover: remaining.gameover
+      };
+      this.timer = timerOutput;
     },
     // Query fns
     loadState: async function () {
@@ -279,10 +318,25 @@ export default {
 <style scoped>
 .game {
   position: absolute;
-  top: 2.5em;
+  max-height: 90vh;
+  top: 2em;
+  height: 90%;
+  border-radius: 16px;
+  max-width: 50%;
+}
+.game.diamond {
+  background: rgba(255, 77, 0, 0.15);
+}
+.gameplay {
+  position: absolute;
+  top: 11.5px;
+  left: -10px;
   max-width: 678px;
   margin-left: 0.5em;
   margin-right: 0.5em;
+}
+.timer {
+  margin-left: 0.5em;
 }
 .timer-display {
   display: flex;
@@ -324,17 +378,8 @@ export default {
   border-radius: 0  0 8px 8px;
   background: linear-gradient(0deg, rgba(255, 77, 0, 0.60) 0%, rgba(255, 77, 0, 0.60) 100%), #000;
 }
-.tx-msg span {
-  float: right;
-  cursor: pointer;
-  position: relative;
-  top: 1.5em;
-  right: 0.5em;
-}
-.tx-msg div {
-  padding: 0.25em;
-  border-radius: 8px;
-  clear: both;
+.timer-display.orange, .time-remaining.orange {
+  background: linear-gradient(0deg, #FF4D00 0%, #FF4D00 100%), #000 !important;
 }
 .row.game-data {
   position: absolute;
@@ -397,5 +442,38 @@ export default {
   font-style: normal;
   font-weight: 400;
   line-height: 150%;
+}
+.max-control.winner {
+  color: #FFFFFF;
+  text-align: left;
+}
+.controls-main, .controls-main .controls, .controls-main .controls button {
+  width: 98.9%;
+  margin-top: -56px;
+  margin-left: 0.5%;
+}
+.controls-main .controls button {
+  height: 96px;
+  padding: 0px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+
+/* XXX TODO: Deal with legacy css below? */
+.tx-msg span {
+  float: right;
+  cursor: pointer;
+  position: relative;
+  top: 1.5em;
+  right: 0.5em;
+}
+.tx-msg div {
+  padding: 0.25em;
+  border-radius: 8px;
+  clear: both;
 }
 </style>

@@ -88,20 +88,31 @@ a:hover, a:active, a:focus {
   border: 1px solid #FF4D00 !important;
   background: #FF4D00 !important;
   box-shadow: 3px 9px 32px -4px rgba(0, 0, 0, 0.07) !important;
+  color: #FFFFFF;
 }
 .btn-inverse, .btn-inverse:hover, .btn-inverse:focus, .btn-inverse:active {
   border-radius: 8px !important;
   border: 1px solid #FF4D00 !important;
   background: #000 !important;
+  box-shadow: 3px 9px 32px -4px rgba(0, 0, 0, 0.07) !important;
+  color: #FFFFFF;
 }
 .btn-secondary, .btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active {
   border-radius: 4px !important;
   border: 1px solid #FF4D00 !important;
   background: linear-gradient(0deg, rgba(255, 77, 0, 0.30) 0%, rgba(255, 77, 0, 0.30) 100%), #000 !important;
   box-shadow: 3px 9px 32px -4px rgba(0, 0, 0, 0.07) !important;
+  color: #FFFFFF;
 }
 
+.game, .grid-container, .grid-mask, .page-content.col.left,
+.page-content.col.left .home.page {
+  min-width: 800px;
+  max-width: 800px;
+}
 .grid-container {
+  overflow: hidden;
+  max-height: 90vh;
   margin-left: -12px;
 }
 .grid1 {
@@ -139,7 +150,7 @@ a:hover, a:active, a:focus {
   background-size: 45px 30px;
   background-repeat: repeat;
   transform-origin: 100% 0 0;
-  transform: rotateX(45deg) translateY(40%);
+  transform: rotateX(45deg) translateY(15%);
   /* animation: play 15s linear infinite; */
 }
 .grid2-lines {
@@ -149,23 +160,24 @@ a:hover, a:active, a:focus {
   background-size: 45px 30px;
   background-repeat: repeat;
   transform-origin: 100% 0 0;
-  transform: rotateX(45deg) translateY(-76%);
+  transform: rotateX(45deg) translateY(-53%);
   /* animation: play 15s linear infinite; */
 }
 .grid-mask {
   overflow: hidden;
   width: 800px;
-  height: 954px;
+  height: 90vh;
   position: relative;
   top: -3em;
   border-radius: 310px;
   opacity: 0.6;
+  pointer-events: none;
 }
 .grid-mask.orange {
   background: radial-gradient(50% 50% at 50% 50%, rgba(255, 77, 0, 0.75) 0%, rgba(255, 77, 0, 0.00) 100%);
 }
 .grid-mask.diamond {
-  background: radial-gradient(50% 50% at 50% 50%, rgb(145, 242, 255, 0.75) 0%, rgba(255, 77, 0, 0.30) 83.07%);
+  background: radial-gradient(50% 50% at 50% 50%, rgb(145, 242, 255, 0.75) 0%, rgba(255, 77, 0, 0.00) 100%);
 }
 
 .modal-wrapper {

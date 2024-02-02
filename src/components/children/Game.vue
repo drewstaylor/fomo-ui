@@ -96,8 +96,8 @@
   <!-- Game Data Display -->
   <div class="game-data row" v-if="state.expiration">
     <div class="prize-display" v-if="state.last_depositor">
-      <div class="prize-value">{{prizeDisplay}}</div>
-      <div class="prize-denom">{{denom}}<span class="icon icon-lg icon-denom"></span></div>
+      <div class="prize-value" title="Prize Pool" alt="Prize Pool">{{prizeDisplay}}</div>
+      <div class="prize-denom" title="Prize Pool" alt="Prize Pool">{{denom}}<span class="icon icon-lg icon-denom"></span></div>
     </div>
     <hr class="ruled-line" />
     <div class="controller" v-if="state.last_depositor">

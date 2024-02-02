@@ -315,8 +315,7 @@ li.nav-item {
 }
 .col.sub {
   display: inline-flex;
-  position: relative;
-  top: 8px;
+  margin-top: 16px;
 }
 .btn.player-id, .btn.change-id {
   font-size: 16px;

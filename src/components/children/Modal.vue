@@ -74,8 +74,8 @@ export default {
         this.content.header.title = 'Welcome to';
         this.content.header.subtitle = '<span class="brand brand-1">Network</span><span class="brand brand-2">Wars</span>';
         this.content.body.text = [
-          'The rules are simple, if you control the network when the time is up, you get the prize pool.',
-          'To control the network, users must pay '+ FromAtto(this.state.min_deposit) + ' ' + this.denom +'. Every time there is a new controller, '+ FromAtto(this.state.min_deposit) + ' ' + this.denom +' is added to the prize pool, and '+ this.secondsToMinutes(this.state.extensions) +' added to the countdown.',
+          'The rules are simple. Pay '+ FromAtto(this.state.min_deposit) + ' ' + this.denom +' to control the network. If you control the network when the time is up, you win the funds in the prize pool.',
+          'Every time there is a new controller, '+ FromAtto(this.state.min_deposit) + ' ' + this.denom +' is added to the prize pool and '+ this.secondsToMinutes(this.state.extensions) +' added to the countdown.',
           'Good Luck.'
         ];
         this.content.footer.buttons = [{name: 'welcome', value: 'Start Playing'}];

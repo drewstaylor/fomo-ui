@@ -175,7 +175,6 @@ a:hover, a:active, a:focus {
   width: 800px;
   height: 90vh;
   position: relative;
-  top: -3em;
   border-radius: 310px;
   opacity: 0.6;
   pointer-events: none;

@@ -97,6 +97,7 @@ const ARCHID_PROFILE_LINK_PREFIX = (IsTestnet) ? "https://test.archid.app/domain
 
 export default {
   name: 'Fomo',
+  components: { Modal },
   data: () => ({
     cwClient: null,
     accounts: [],
@@ -122,7 +123,6 @@ export default {
       id: false,
     },
   }),
-  components: { Modal },
   mounted: async function () {
     if (window) {
       let connected = window.sessionStorage.getItem('connected');

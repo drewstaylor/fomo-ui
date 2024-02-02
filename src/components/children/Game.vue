@@ -18,7 +18,7 @@
     <!-- Game Active (Timer) -->
     <div class="gameplay" v-if="!gameover">
       <div class="timer" v-if="timer">
-        <div :class="{'timer-display': true, 'orange': winning == you}">
+        <div :class="{'timer-display': true, 'orange': winning == you, 'gameover': gameover}">
           <div class="col days">
             <div class="value">{{timer.days}}</div>
             <div class="label">Days</div>
@@ -39,7 +39,7 @@
             <div class="label">Seconds</div>
           </div>
         </div>
-        <div :class="{'time-remaining': true, 'orange': winning == you}">Time Remaining</div>
+        <div :class="{'time-remaining': true, 'orange': winning == you, 'gameover': gameover}">Time Remaining</div>
       </div>
     </div>
     <div class="gameplay" v-else>
@@ -70,12 +70,18 @@
     </div>
 
     <!-- Deposit -->
-    <div class="controls-main active-game" v-if="!gameover">
+    <div class="controls-main active-game" v-if="!gameover && state.min_deposit">
       <div class="controls" v-if="!readOnly">
         <button 
           class="btn btn-primary"
           @click="deposit();"
-        >Deposit</button>
+          v-if="winning !== you"
+        >Take Control for {{minDeposit}}<span class="icon icon-denom deposit-denom"></span></button>
+        <button 
+          class="btn btn-inverse"
+          @click="deposit();"
+          v-if="winning == you"
+        >You’re in Control</button>
       </div>
     </div>
     <!-- Gameover -->
@@ -108,7 +114,7 @@
         <a :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a>
       </div>
       <div class="value max-control" v-if="winning == you && !gameover">
-        <span>You're in control</span>
+        <span class="text-white">You're in control</span>
       </div>
       <div class="value max-control winner" v-if="winning == you && gameover">
         <span>Congratulations, you won the Network Wars. Game will reset when you claim the prize.</span>
@@ -120,13 +126,39 @@
     </div>
   </div>
 
-  <!-- Tx Status Notifications -->
-  <div class="tx-msg" v-if="status.notification">
-    <span class="close-x" @click="status = {notification: null, type: null}">&times;</span>
-    <div class="bg-info" v-if="status.type == 'info'">{{status.notification}}</div>
-    <div class="bg-success" v-if="status.type == 'success'">{{status.notification}}</div>
-    <div class="bg-danger" v-if="status.type == 'error'">{{status.notification}}</div>
-  </div>
+  <!-- Tx Confirming Notification -->
+  <Modal
+    v-bind:name="'confirm'"
+    v-bind:footer="false"
+    v-bind:showModal="showModal.confirm"
+    v-bind:msg="status.notification"
+    @close="closeModals"
+    v-if="showModal.confirm && status.type == 'confirm'"
+  >
+  </Modal>
+
+  <!-- Tx Error Notification -->
+  <Modal
+    v-bind:name="'error'"
+    v-bind:footer="false"
+    v-bind:showModal="showModal.error"
+    v-bind:msg="status.notification"
+    @close="closeModals"
+    v-if="showModal.error && status.type == 'error'"
+  >
+  </Modal>
+
+  <!-- Tx Success Notification -->
+  <Modal
+    v-bind:name="'success'"
+    v-bind:footer="false"
+    v-bind:showModal="showModal.success"
+    v-bind:msg="status.notification"
+    @close="closeModals"
+    v-if="showModal.success && status.type == 'success'"
+  >
+  </Modal>
+
 </template>
 
 <script>
@@ -134,6 +166,8 @@ import { TokensOf } from '../../util/archid';
 import { Query, Execute } from '../../util/contract';
 import { FromAtto } from '../../util/denom';
 import { Client } from '../../util/client';
+
+import Modal from './Modal.vue';
 
 const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
 const ARCHID_PROFILE_LINK_PREFIX = (IsTestnet) ? "https://test.archid.app/address/" : "https://archid.app/address/";
@@ -145,6 +179,7 @@ export default {
     cwClient: Object,
     readOnly: Boolean,
   },
+  components: { Modal },
   data: () => ({
     state: {},
     fomo: { Query, Execute },
@@ -159,6 +194,11 @@ export default {
     status: {
       notification: null,
       type: null,
+    },
+    showModal: {
+      confirm: false,
+      error: false,
+      success: false,
     },
     formatFromAtto: FromAtto,
   }),
@@ -206,6 +246,15 @@ export default {
       };
       this.timer = timerOutput;
     },
+    closeModals: function () {
+      this.status = {
+        notification: null,
+        type: null,
+      };
+      if (this.showModal.confirm) this.showModal.confirm = false;
+      if (this.showModal.error) this.showModal.error = false;
+      if (this.showModal.success) this.showModal.success = false;
+    },
     // Query fns
     loadState: async function () {
       if (!this.cwClient) return;
@@ -234,44 +283,110 @@ export default {
     },
     // Execute fns
     deposit: async function () {
+      // Confirmation notification
       this.status = {
-        notification: "Waiting for deposit to confirm...",
-        type: "info",
+        notification: ["Attempting to take control of the network"],
+        type: "confirm",
       };
-      // XXX TODO: Add support for depositing custom amounts?
+      this.showModal = {
+        confirm: true,
+        error: false,
+        success: false,
+      };
+
+      // Tx broadcast
       let depositAmount = (this.state.min_deposit) ? Number(this.state.min_deposit) : 1000000000000000000;
       this.executeResult = await this.fomo.Execute.Deposit(depositAmount, this.cwClient);
+      
+      // Error notification
       if (this.executeResult['error']) {
-        return this.status = {
-          notification: this.executeResult.error,
+        this.status = {
+          notification: [this.executeResult.error],
           type: "error",
         };
+        this.showModal = {
+          confirm: false,
+          error: true,
+          success: false,
+        };
+        return;
       }
+
+      // Success notification
       this.status = {
-        notification: "Deposit successfully executed",
+        notification: {
+          title: "Deposit successful",
+          body: ["You control the network"]
+        },
         type: "success",
       };
+      this.showModal = {
+        confirm: false,
+        error: false,
+        success: true,
+      };
+
+      // Resolve Updates
       await this.loadState();
       this.$root.resolveUpdates();
       console.log(this.executeResult);
     },
     claim: async function () {
+      // Integrity checks
+      if (this.state.last_depositor !== this.accounts[0].address) return console.warn("Claimant must be winner");
+      let expirationTime = new Date(this.state.expiration * 1000).getTime();
+      let currentTime = new Date().getTime();
+      if (currentTime < expirationTime) return console.warn("Game must be over");
+
+      // Cache prize amount
+      let prize = JSON.stringify(this.formatFromAtto(this.prize.amount));
+
+      // Confirmation notification
       this.status = {
-        notification: "Waiting for prize claim transaction to confirm...",
-        type: "info",
+        notification: ["Attempting to claiming your prize"],
+        type: "confirm",
       };
-      this.status = {notification: null, type: 'info'};
+      this.showModal = {
+        confirm: true,
+        error: false,
+        success: false,
+      };
+
+      // Tx broadcast
       this.executeResult = await this.fomo.Execute.Claim(this.cwClient);
+
+      // Error notification
       if (this.executeResult['error']) {
-        return this.status = {
-          notification: this.executeResult.error,
+        this.status = {
+          notification: [this.executeResult.error],
           type: "error",
         };
+        this.showModal = {
+          confirm: false,
+          error: true,
+          success: false,
+        };
+        return;
       }
+
+      // Success notification
       this.status = {
-        notification: "Congratulations! Prize successfully claimed",
+        notification: {
+          title: "Epic Win",
+          body: [
+            "You won this round of Network Wars.",
+            "The prize of "+ prize + " " + this.denom + " has been deposited in your account."
+          ]
+        },
         type: "success",
       };
+      this.showModal = {
+        confirm: false,
+        error: false,
+        success: true,
+      };
+
+      // Resolve updates
       await this.loadState();
       this.$root.resolveUpdates();
       console.log(this.executeResult);
@@ -382,9 +497,15 @@ export default {
 .timer-display.orange, .time-remaining.orange {
   background: linear-gradient(0deg, #FF4D00 0%, #FF4D00 100%), #000 !important;
 }
+.timer-display.gameover {
+  background: linear-gradient(180deg, #DB4139 9.82%, #982826 63.33%);
+}
+.timer div.time-remaining.gameover {
+  background: #982826;
+}
 .row.game-data {
   position: absolute;
-  top: 15.5em;
+  top: 33%;
   width: 45%;
   max-width: 790px;
   margin: auto;
@@ -395,7 +516,7 @@ export default {
   margin-top: 1em;
   margin-bottom: 1em;
   width: 75%;
-  color: rgba(255, 255, 255, 0.20);
+  color: rgb(255, 255, 255);
 }
 .prize-display {
   display: flex;
@@ -462,19 +583,7 @@ export default {
   font-weight: 400;
   line-height: 150%;
 }
-
-
-/* XXX TODO: Deal with legacy css below? */
-.tx-msg span {
-  float: right;
-  cursor: pointer;
-  position: relative;
-  top: 1.5em;
-  right: 0.5em;
-}
-.tx-msg div {
-  padding: 0.25em;
-  border-radius: 8px;
-  clear: both;
+.icon.deposit-denom {
+  top: 3px;
 }
 </style>

@@ -5,15 +5,22 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
 
+            <!-- Header -->
             <div :id="'header-'+name" class="modal-header">
               <div class="title modal-title" v-if="content.header.title" v-html="content.header.title"></div>
               <div class="subtitle" v-if="content.header.subtitle" v-html="content.header.subtitle"></div>
             </div>
-            
-            <div :id="'body-'+name" class="modal-body" v-if="content.body.text.length">
+
+            <!-- Body -->
+            <div :id="'body-'+name" class="modal-body" v-if="content.body.text.length && name !== 'confirm'">
               <p class="descr" v-for="(content, i) in content.body.text" :key="i+'-body'">{{content}}</p>
             </div>
-            
+            <div :id="'body-'+name" class="modal-body" v-if="content.body.text.length && name == 'confirm'">
+              <p class="descr" v-for="(content, i) in content.body.text" :key="i+'-body'">{{content}}</p>
+              <div class="loading default"></div>
+            </div>
+
+            <!-- Footer -->
             <div :id="'footer-'+name" class="modal-footer" v-if="footer">
               <div class="controls" v-if="content.footer.buttons.length">
                 <ul class="list-none">
@@ -109,39 +116,31 @@ export default {
         this.content.header.subtitle = ['Connecting...'];
         break;
       }
-      case 'archid-required': {
-        this.content.header.title = '<span class="icon icon-stop"></span>';
-        this.content.header.subtitle = 'You need an ArchID to play.';
-        this.content.body.text = ['Looks like there are no ArchIDs associated with this wallet.'];
-        this.content.footer.buttons = [
-          {name: 'get_archid', value: 'Get Your ArchID<span class="icon icon-external-link"></span>'},
-          {name: 'logout', value: '<span class="icon icon-logout"></span>Logout'}
-        ];
-        break;
-      }
       case 'archid-select': {
-        this.content.header.subtitle = 'Select ArchID';
+        this.content.header.title = 'Select ArchID';
         this.content.body.text = ['Select a player name to use for this game'];
         this.msg.forEach((domain) => {
           this.content.footer.buttons.push({name: 'archid-select', value: domain});
         });
         break;
       }
-      case 'deposit': {
-        this.content.header.subtitle = 'Attempting to take control of the network';
+      case 'confirm': {
+        if (!this.msg.length || !Array.isArray(this.msg)) console.warn('Error resolve custom confirm messages. Expected Array');
+        this.content.header.title = this.msg[0];
         this.content.body.text = ['Sign the transaction with your wallet app.'];
+        break;
+      }
+      case 'error': {
+        if (!this.msg.length || !Array.isArray(this.msg)) console.warn('Error resolve custom errpr messages. Expected Array');
+        this.content.header.title = '<span class="icon icon-lg icon-alert"></span>';
+        this.content.header.subtitle = '<span class="text-white">Something Went Wrong</span>';
+        this.content.body.text = this.msg;
         break;
       }
       case 'success': {
         if (!this.msg['title'] || !this.msg['body']) console.warn('Error resolve custom success messages (title or body)');
-        this.content.header.subtitle = this.msg.title;
-        this.content.body.text = [this.msg.body];
-        break;
-      }
-      case 'error': {
-        this.content.header.title = '<span class="icon icon-stop"></span>';
-        this.content.header.subtitle = 'Something Went Wrong';
-        this.content.body.text = [this.msg];
+        this.content.header.title = this.msg.title;
+        this.content.body.text = this.msg.body;
         break;
       }
       default: {
@@ -207,5 +206,15 @@ li .btn.wallet-select {
   bottom: 0;
   left: 0;
   right: 0;
+}
+#header-welcome {
+  align-items: center;
+}
+#header-welcome .modal-title {
+  text-align: center;
+}
+.loading.default {
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 </style>

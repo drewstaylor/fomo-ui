@@ -3,7 +3,8 @@
     <div :id="'wrapper-'+name" class="modal-wrapper" v-if="showModal" @click="close">
       <div :id="'modal-'+name" class="modalt">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
+          <!-- Modals From Props -->
+          <div class="modal-content" v-if="name !== 'player-create'">
 
             <!-- Header -->
             <div :id="'header-'+name" class="modal-header">
@@ -41,8 +42,17 @@
                 </ul>
               </div>
             </div>
-
           </div>
+
+          <!-- Modals From Components -->
+          <div class="modal-content" v-else>
+            <Player
+              v-bind:accounts="accounts"
+              v-bind:cwClient="cwClient"
+              @setPlayer="setPlayer"
+            ></Player>
+          </div>
+
         </div>
       </div>
     </div>
@@ -53,17 +63,24 @@
 import { FromAtto } from '../../util/denom';
 import { Token } from '../../util/archid';
 
+import Player from './Player.vue';
+
 const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
 const DefaultAvatar = "/img/token.svg";
 
 export default {
   props: {
+    // Generic props
     name: String,
     footer: Boolean,
     showModal: Boolean,
-    state: Object,
     msg: Object,
+    // State props
+    accounts: Object,
+    cwClient: Object,
+    state: Object,
   },
+  components: { Player },
   emits: ['button', 'close', 'setPlayer'],
   data: () => ({
     content: {
@@ -116,6 +133,9 @@ export default {
         this.content.header.subtitle = ['Connecting...'];
         break;
       }
+      case 'player-create': {
+        break;
+      }
       case 'archid-select': {
         this.content.header.title = 'Select ArchID';
         this.content.body.text = ['Select a player name to use for this game'];
@@ -165,6 +185,9 @@ export default {
       this.$emit('setPlayer', player);
       this.emitButton(this.name);
     },
+    setPlayer: function (player)  {
+      this.$emit('setPlayer', player);
+    },
     emitButton: async function (name) {
       this.$emit('button', name);
     },
@@ -212,6 +235,12 @@ li .btn.wallet-select {
 }
 #header-welcome .modal-title {
   text-align: center;
+}
+#modal-player-create, #modal-archid-select {
+  min-width: 50vw;
+}
+.modal-dialog, .modal-content {
+  max-width: 100%;
 }
 .loading.default {
   margin-top: 1em;

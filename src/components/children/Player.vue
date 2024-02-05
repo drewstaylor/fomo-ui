@@ -1,7 +1,9 @@
 <template>
-  <div class="player-id-select" v-if="!loading">
-    <div v-if="tokens.length">
-      <h3 class="title">Select ArchID</h3>
+  <div class="player-id-select" v-if="!loading && tokens.length">
+    <div class="modal-header">
+      <h3 class="title modal-title">Select ArchID</h3>
+    </div>
+    <div class="modal-body">
       <p class="descr">Select a player name to use for this game</p>
       <ul class="token-list">
         <li v-for="tokenId in tokens" :key="tokenId">
@@ -9,11 +11,15 @@
         </li>
       </ul>
     </div>
-    <div v-else>
+  </div>
+  <div v-if="!loading && !tokens.length">
+    <div class="modal-header">
       <div class="warn">
         <span class="icon icon-lg icon-alert"></span>
       </div>
-      <h3 class="title">You need an ArchID to play</h3>
+      <h3 class="title modal-title">You need an ArchID to play</h3>
+    </div>
+    <div class="modal-body">
       <p class="descr">Looks like there are no ArchIDs associated with this wallet</p>
       <ul class="option-list">
         <li>
@@ -25,6 +31,14 @@
           <button class="btn btn-secondary btn-archid" @click="logout();">Logout<span class="icon icon-logout"></span></button>
         </li>
       </ul>
+    </div>
+  </div>
+  <div class="loading" v-if="loading">
+    <div class="modal-header">
+      <div class="title modal-title">Loading Your ArchIDs</div>
+    </div>
+    <div class="modal-body">
+      <div class="loading default"></div>
     </div>
   </div>
 </template>
@@ -50,7 +64,7 @@ export default {
     loading: true,
     archIdMintLink: (IsTestnet) ? "https://test.archid.app" : "https://archid.app",
   }),
-  emits: ['playerConfig', 'setPlayer'],
+  emits: ['setPlayer'],
   watch: {
     async accounts() {
       if (!Array.isArray(this.accounts)) return;

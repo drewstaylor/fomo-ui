@@ -7,18 +7,17 @@
     </div>
     <div class="body row" v-if="transactions.length">
       <div 
-        :class="{'row': true, 'history-item': true, 'you': tx.displayName == defaultPlayerName}" 
+        :class="{'row': true, 'history-item': true, 'you': (accounts.length) ? tx.sender == accounts[0].address : false}" 
         v-for="(tx, i) in historyPage" 
         :key="'history-item-'+i"
       >
-        <div class="col display-name" v-if="tx.displayName">
+        <div class="col display-name">
           <span v-if="tx.sender">
-            <a 
-              :href="profileLink + tx.sender" 
-              target="_blank"
-            >{{ tx.displayName }}</a>
+            <a :href="profileLink + tx.sender" target="_blank">
+              <span v-if="(accounts.length) ? tx.sender == accounts[0].address : false">You</span>
+              <span v-else>{{tx.displayName}}</span>
+            </a>
           </span>
-          <span v-else>{{ tx.displayName }}</span>
         </div>
         <div class="col action" v-if="tx.action">
           <span

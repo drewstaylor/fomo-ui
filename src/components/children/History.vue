@@ -25,6 +25,13 @@
             class="descr action deposit"
           >Took control and added {{ secondsToMinutes(state.extensions) }}</span>
         </div>
+        <div class="col height" v-if="tx.height">
+          <a 
+            :href="explorerLink + tx.hash" 
+            class="explorer-link" 
+            target="_blank"
+          >{{tx.height}}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -38,6 +45,7 @@ const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
 const DefaultPlayerName = 'You';
 const CW721_CONTRACT = process.env.VUE_APP_ARCHID_CW721_CONTRACT;
 const ARCHID_PROFILE_LINK_PREFIX = (IsTestnet) ? "https://test.archid.app/address/" : "https://archid.app/address/";
+const EXPLORER_LINK = (IsTestnet) ? "https://testnet.mintscan.io/archway-testnet/txs/" : "https://www.mintscan.io/archway/tx/";
 
 export default {
   name: 'History',
@@ -55,6 +63,7 @@ export default {
     size: 10,
     limit: 100,
     profileLink: ARCHID_PROFILE_LINK_PREFIX,
+    explorerLink: EXPLORER_LINK,
     defaultPlayerName: DefaultPlayerName,
   }),
   mounted: async function () {
@@ -172,7 +181,7 @@ export default {
 }
 div.action span {
   color: #FFFFFF;
-  text-align: right;
+  text-align: center;
   font-size: 18px;
   font-style: normal;
   font-weight: 400;
@@ -198,12 +207,28 @@ div.action span {
 .history-item.you div {
   background: #702100;
 }
-div.display-name, div.display-name span, span a {
+div.display-name, 
+div.display-name span, 
+span a, 
+.col.height,
+.col.height a {
   color: #FF4D00;
   text-align: left;
   font-size: 18px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%;
+}
+.col.display-name, .col.action {
+  width: 20%;
+}
+.col.action {
+  min-width: fit-content;
+  text-align: center;
+}
+.col.height {
+  width: 10%;
+  text-align: right;
+  display: block;
 }
 </style>

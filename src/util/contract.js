@@ -5,6 +5,28 @@ import { FromAtto } from './denom';
 const FOMO_CONTRACT = process.env.VUE_APP_FOMO_CONTRACT;
 const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
 
+// Helpers
+
+/**
+ * Private parsing function for tx filter args.
+ * @param { String } oneLiner : Tx filter arguments; e.g. `wasm._contract_address=${contract}&wasm.token_id=${tokenId}`
+ * @returns { Object } : { key, value } kv pairs
+ */
+function _makeTags(oneLiner)  {
+  return oneLiner.split("&").map((pair) => {
+    if (pair.indexOf("=") === -1) throw new Error("Parsing error: Equal sign missing");
+    const parts = pair.split("=");
+    if (parts.length > 2) {
+      throw new Error(
+        "Parsing error: multiple equal signs found.",
+      );
+    }
+    const [key, value] = parts;
+    if (!key) throw new Error("Parsing error: key must not be empty");
+    return { key, value };
+  });
+}
+
 // Queries
 
 /**
@@ -34,6 +56,23 @@ async function PrizePool(client = null) {
     let denom = (IsTestnet) ? "aconst" : "aarch";
     let balance = await client.wasmClient.queryClient.bank.balance(FOMO_CONTRACT, denom);
     return balance;
+  } catch(e) {
+    console.error(e);
+    return {error: e};
+  }
+}
+
+async function History(round = 1, client = null) {
+  if (!client) client = await Client();
+  if (!round) round = 1;
+  try {
+    // let historyQuery = await client.wasmClient.searchTx(
+    //   _makeTags(`wasm._contract_address=${FOMO_CONTRACT}&wasm.round=${round}`),
+    // );
+    let historyQuery = await client.wasmClient.searchTx(
+      _makeTags(`wasm._contract_address=${FOMO_CONTRACT}`),
+    );
+    return historyQuery;
   } catch(e) {
     console.error(e);
     return {error: e};
@@ -108,7 +147,7 @@ async function Claim(client = null) {
 
 
 // Exports
-const Query = { Game, PrizePool };
+const Query = { Game, PrizePool, History };
 const Execute = { Deposit, Claim};
 
 export {

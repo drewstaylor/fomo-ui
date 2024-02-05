@@ -1,12 +1,13 @@
 <template>
   <div class="app row">
-    <!-- Page Content -->
+    <!-- Page Content: Left -->
     <div class="page-content col left">
       <router-view :key="render" />
     </div>
 
-    <!-- User / Nav -->
+    <!-- Page Content: Right -->
     <div class="navbar col right">
+      <!-- User / Nav -->
       <div class="navbar-brand">
         <div class="brand-wrapper row">
           <div class="col left raised">
@@ -42,7 +43,16 @@
             ></div>
           </div>
         </div>
+      </div>
 
+      <!-- Tx History -->
+      <div class="page-content game-history row right" v-if="readOnlyClient">
+        <History
+          v-bind:cwClient="readOnlyClient"
+          v-bind:accounts="accounts"
+          v-bind:state="state"
+        >
+        </History>
       </div>
     </div>
   </div>
@@ -87,6 +97,7 @@ import { Client, Accounts } from './util/client';
 import { FromAtto } from './util/denom';
 import { Query } from './util/contract';
 
+import History from './components/children/History.vue';
 import Modal from './components/children/Modal.vue';
 
 const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
@@ -97,7 +108,7 @@ const ARCHID_PROFILE_LINK_PREFIX = (IsTestnet) ? "https://test.archid.app/domain
 
 export default {
   name: 'Fomo',
-  components: { Modal },
+  components: { History, Modal },
   data: () => ({
     cwClient: null,
     accounts: [],
@@ -109,6 +120,7 @@ export default {
       id: null,
       avatar: null,
     },
+    readOnlyClient: null,
     defaultAvatar: DefaultAvatar,
     archIdMintLink: (IsTestnet) ? "https://test.archid.app" : "https://archid.app",
     walletTypes: ['keplr', 'cosmostation', 'leap'],
@@ -116,6 +128,7 @@ export default {
     render: 0,
     denom: (IsTestnet) ? "CONST" : "ARCH",
     profileLink: ARCHID_PROFILE_LINK_PREFIX,
+    historyRender: 0,
     formatFromAtto: FromAtto,
     showModal: {
       welcome: false,
@@ -207,8 +220,12 @@ export default {
     playerModal: function () {
       this.showModal.id = !this.showModal.id;
     },
+    resolveHistory: function () {
+      ++this.historyRender;
+    },
     resolveUpdates: async function () {
       try {
+        this.resolveHistory();
         let accounts = await Accounts(this.cwClient);
         if (!accounts[0].address) return;
         this.accounts = accounts;
@@ -266,6 +283,17 @@ export default {
   margin: -1px;
   margin-right: 34px;
   max-height: 90vh;
+  overflow: hidden;
+  padding: 0;
+}
+.page-content.right {
+  width: 100%;
+  height: calc(90vh - (150px + 1em));
+  border-radius: 16px;
+  border: 1px solid #FF4D00;
+  background: rgba(255, 77, 0, 0.20);
+  margin: -1px;
+  margin-top: 1em;
   overflow: hidden;
   padding: 0;
 }

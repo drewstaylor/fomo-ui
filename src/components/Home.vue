@@ -67,6 +67,7 @@ export default {
       this.showModal = true;
     }
     this.readOnlyClient = await Client('offline');
+    this.$root.readOnlyClient = this.readOnlyClient;
   },
   methods: {
     resumeConnectedState: async function (attempts = 0) {

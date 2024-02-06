@@ -25,10 +25,16 @@
             class="explorer-link" 
             target="_blank"
           >
+            <!-- Deposit -->
             <span
               v-if="tx.action == 'execute_deposit' && state.extensions"
               class="descr action deposit"
             >Took control and added {{ secondsToMinutes(state.extensions) }}</span>
+            <!-- Prize Claim -->
+            <span
+              v-if="tx.action == 'execute_claim' && state.round"
+              class="descr action claim"
+            >Won round {{ state.round }} of {{ app_name }}</span>
           </a>
         </div>
       </div>
@@ -54,10 +60,12 @@ export default {
     state: Object,
   },
   data: () => ({
+    app_name: "Network Wars",
     cw721: CW721_CONTRACT,
     min_deposit: null,
     transactions: [],
     fomo: { Query },
+    round: null,
     page: null,
     size: 10,
     limit: 100,
@@ -66,6 +74,7 @@ export default {
     defaultPlayerName: DefaultPlayerName,
   }),
   mounted: async function () {
+    if (this.state['round']) this.round = this.state.round;
     await this.loadHistory();
   },
   methods: {
@@ -78,9 +87,10 @@ export default {
     },
     loadHistory: async function () {
       if (!this.cwClient) return console.error("Error loading history, expected cwClient", this.cwClient);
-      let query = await this.fomo.Query.History(1, this.cwClient);
+      let round = (this.round) ? this.round : 1;
+      let query = await this.fomo.Query.History(round, this.cwClient);
       if (!Array.isArray(query)) return console.error("Error loading history, expected array", query)
-      query.reverse();
+      query.reverse(); // Sort -> newest txs first
       this.transactions = query;
       await this.setPage();
       // console.log('Tx History', this.transactions);

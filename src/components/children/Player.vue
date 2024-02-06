@@ -1,10 +1,10 @@
 <template>
-  <div class="player-id-select" v-if="!loading && tokens.length">
+  <div class="modal-content" v-if="!loading && tokens.length">
     <div class="modal-header">
-      <h3 class="title modal-title">Select ArchID</h3>
+      <div class="title modal-title">Select ArchID</div>
     </div>
     <div class="modal-body">
-      <p class="descr">Select a player name to use for this game</p>
+      <p class="descr">Select a name to use for this game</p>
       <ul class="token-list">
         <li v-for="tokenId in tokens" :key="tokenId">
           <button class="btn btn-secondary btn-archid" @click="selectDomain(tokenId);">{{tokenId}}</button>
@@ -12,7 +12,7 @@
       </ul>
     </div>
   </div>
-  <div v-if="!loading && !tokens.length">
+  <div class="modal-content" v-if="!loading && !tokens.length">
     <div class="modal-header">
       <div class="warn">
         <span class="icon icon-lg icon-alert"></span>
@@ -33,9 +33,9 @@
       </ul>
     </div>
   </div>
-  <div class="loading" v-if="loading">
+  <div class="loading modal-content" v-if="loading">
     <div class="modal-header">
-      <div class="title modal-title">Loading Your ArchIDs</div>
+      <div class="title modal-title">Loading ArchIDs</div>
     </div>
     <div class="modal-body">
       <div class="loading default"></div>
@@ -129,16 +129,8 @@ export default {
 
 <style scoped>
 .player-id-select {
-  padding: 1em;
   background: linear-gradient(0deg, rgba(255, 77, 0, 0.20) 0%, rgba(255, 77, 0, 0.20) 100%), #000;
   color: #FFFFFF;
-}
-h3.title {
-  font-size: 32px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 120%;
-  letter-spacing: -0.32px;
 }
 p.descr {
   color: rgba(255, 255, 255, 0.60);
@@ -147,6 +139,9 @@ p.descr {
   font-weight: 400;
   line-height: 120%;
   letter-spacing: -0.16px;
+}
+ul.option-list, ul.token-list li {
+  margin: 0;
 }
 ul.token-list, ul.token-list li, ul.option-list, ul.option-list li {
   list-style: none;

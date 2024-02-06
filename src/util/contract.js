@@ -105,7 +105,7 @@ async function Deposit(amount = 0, client = null) {
       FOMO_CONTRACT,
       entrypoint,
       client.fees,
-      "Fomo-ing in with " + deposit + " " + denom,
+      "Controlling the Network with " + deposit + " " + denom,
       funds
     );
     return tx;

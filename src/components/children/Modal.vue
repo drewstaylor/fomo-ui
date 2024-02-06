@@ -45,13 +45,12 @@
           </div>
 
           <!-- Modals From Components -->
-          <div class="modal-content" v-else>
-            <Player
-              v-bind:accounts="accounts"
-              v-bind:cwClient="cwClient"
-              @setPlayer="setPlayer"
-            ></Player>
-          </div>
+          <Player
+            v-bind:accounts="accounts"
+            v-bind:cwClient="cwClient"
+            @setPlayer="setPlayer"
+            v-if="name == 'player-create'"
+          ></Player>
 
         </div>
       </div>
@@ -138,7 +137,7 @@ export default {
       }
       case 'archid-select': {
         this.content.header.title = 'Select ArchID';
-        this.content.body.text = ['Select a player name to use for this game'];
+        this.content.body.text = ['Select a name to use for this game'];
         this.msg.forEach((domain) => {
           this.content.footer.buttons.push({name: 'archid-select', value: domain});
         });
@@ -223,13 +222,6 @@ li .btn.wallet-select {
 .btn.wallet-select span {
   margin-right: 1em;
 }
-#modal-archid-select {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
 #header-welcome {
   align-items: center;
 }
@@ -238,6 +230,7 @@ li .btn.wallet-select {
 }
 #modal-player-create, #modal-archid-select {
   min-width: 50vw;
+  max-height: 50vh;
 }
 .modal-dialog, .modal-content {
   max-width: 100%;

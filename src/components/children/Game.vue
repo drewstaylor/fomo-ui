@@ -284,8 +284,9 @@ export default {
     // Execute fns
     deposit: async function () {
       // Confirmation notification
+      let msg = (this.state.last_depositor == this.accounts[0].address) ? "You already control the network, but ok LFG" : "Attempting to take control of the network";
       this.status = {
-        notification: ["Attempting to take control of the network"],
+        notification: [msg],
         type: "confirm",
       };
       this.showModal = {
@@ -329,7 +330,7 @@ export default {
       // Resolve Updates
       await this.loadState();
       this.$root.resolveUpdates();
-      console.log(this.executeResult);
+      // console.log(this.executeResult);
     },
     claim: async function () {
       // Integrity checks
@@ -343,7 +344,7 @@ export default {
 
       // Confirmation notification
       this.status = {
-        notification: ["Attempting to claiming your prize"],
+        notification: ["Attempting to claim your prize"],
         type: "confirm",
       };
       this.showModal = {
@@ -389,7 +390,7 @@ export default {
       // Resolve updates
       await this.loadState();
       this.$root.resolveUpdates();
-      console.log(this.executeResult);
+      // console.log(this.executeResult);
     },
   },
   computed: {

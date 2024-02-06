@@ -20,17 +20,16 @@
           </span>
         </div>
         <div class="col action" v-if="tx.action">
-          <span
-            v-if="tx.action == 'execute_deposit' && state.extensions"
-            class="descr action deposit"
-          >Took control and added {{ secondsToMinutes(state.extensions) }}</span>
-        </div>
-        <div class="col height" v-if="tx.height">
           <a 
             :href="explorerLink + tx.hash" 
             class="explorer-link" 
             target="_blank"
-          >{{tx.height}}</a>
+          >
+            <span
+              v-if="tx.action == 'execute_deposit' && state.extensions"
+              class="descr action deposit"
+            >Took control and added {{ secondsToMinutes(state.extensions) }}</span>
+          </a>
         </div>
       </div>
     </div>
@@ -179,7 +178,7 @@ export default {
   font-weight: 400;
   line-height: 150%;
 }
-div.action span {
+div.action a, div.action a span {
   color: #FFFFFF;
   text-align: center;
   font-size: 18px;
@@ -205,13 +204,10 @@ div.action span {
   align-items: center;
 }
 .history-item.you div {
-  background: #702100;
+  background: rgba(255, 77, 0, 0.30);
 }
 div.display-name, 
-div.display-name span, 
-span a, 
-.col.height,
-.col.height a {
+div.display-name span {
   color: #FF4D00;
   text-align: left;
   font-size: 18px;

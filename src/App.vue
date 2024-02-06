@@ -51,6 +51,7 @@
           v-bind:cwClient="readOnlyClient"
           v-bind:accounts="accounts"
           v-bind:state="state"
+          :key="historyRender"
         >
         </History>
       </div>

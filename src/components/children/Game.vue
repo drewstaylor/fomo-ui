@@ -182,7 +182,7 @@ export default {
   components: { Modal },
   data: () => ({
     state: {},
-    fomo: { Query, Execute },
+    netwars: { Query, Execute },
     loading: true,
     prize: null,
     winning: null,
@@ -258,7 +258,7 @@ export default {
     // Query fns
     loadState: async function () {
       if (!this.cwClient) return;
-      this.state = await this.fomo.Query.Game(this.cwClient);
+      this.state = await this.netwars.Query.Game(this.cwClient);
       await this.loadPrizePool();
       await this.loadWinning();
     },
@@ -270,7 +270,7 @@ export default {
     },
     loadPrizePool: async function () {
       let client = (this.readOnly) ? await Client('offline') : this.cwClient;
-      this.prize = await this.fomo.Query.PrizePool(client);
+      this.prize = await this.netwars.Query.PrizePool(client);
     },
     loadWinning: async function () {
       if (!this.state.last_depositor) return;
@@ -297,7 +297,7 @@ export default {
 
       // Tx broadcast
       let depositAmount = (this.state.min_deposit) ? Number(this.state.min_deposit) : 1000000000000000000;
-      this.executeResult = await this.fomo.Execute.Deposit(depositAmount, this.cwClient);
+      this.executeResult = await this.netwars.Execute.Deposit(depositAmount, this.cwClient);
       
       // Error notification
       if (this.executeResult['error']) {
@@ -354,7 +354,7 @@ export default {
       };
 
       // Tx broadcast
-      this.executeResult = await this.fomo.Execute.Claim(this.cwClient);
+      this.executeResult = await this.netwars.Execute.Claim(this.cwClient);
 
       // Error notification
       if (this.executeResult['error']) {

@@ -64,7 +64,7 @@ export default {
     cw721: CW721_CONTRACT,
     min_deposit: null,
     transactions: [],
-    fomo: { Query },
+    netwars: { Query },
     round: null,
     page: null,
     size: 10,
@@ -88,7 +88,7 @@ export default {
     loadHistory: async function () {
       if (!this.cwClient) return console.error("Error loading history, expected cwClient", this.cwClient);
       let round = (this.round) ? this.round : 1;
-      let query = await this.fomo.Query.History(round, this.cwClient);
+      let query = await this.netwars.Query.History(round, this.cwClient);
       if (!Array.isArray(query)) return console.error("Error loading history, expected array", query)
       query.reverse(); // Sort -> newest txs first
       this.transactions = query;

@@ -2,7 +2,7 @@ import { coin } from "@cosmjs/stargate";
 import { Client } from './client';
 import { FromAtto } from './denom';
 
-const FOMO_CONTRACT = process.env.VUE_APP_FOMO_CONTRACT;
+const NETWARS_CONTRACT = process.env.VUE_APP_NETWARS_CONTRACT;
 const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
 
 // Helpers
@@ -39,7 +39,7 @@ async function Game(client = null) {
   try {
     let entrypoint = {game: {}};
     let query = await client.wasmClient.queryClient.wasm.queryContractSmart(
-      FOMO_CONTRACT,
+      NETWARS_CONTRACT,
       entrypoint
     );
     return query;
@@ -54,7 +54,7 @@ async function PrizePool(client = null) {
   if (!client.wasmClient) client = await Client('offline');
   try {
     let denom = (IsTestnet) ? "aconst" : "aarch";
-    let balance = await client.wasmClient.queryClient.bank.balance(FOMO_CONTRACT, denom);
+    let balance = await client.wasmClient.queryClient.bank.balance(NETWARS_CONTRACT, denom);
     return balance;
   } catch(e) {
     console.error(e);
@@ -67,10 +67,10 @@ async function History(round = 1, client = null) {
   if (!round) round = 1;
   try {
     // let historyQuery = await client.wasmClient.searchTx(
-    //   _makeTags(`wasm._contract_address=${FOMO_CONTRACT}&wasm.round=${round}`),
+    //   _makeTags(`wasm._contract_address=${NETWARS_CONTRACT}&wasm.round=${round}`),
     // );
     let historyQuery = await client.wasmClient.searchTx(
-      _makeTags(`wasm._contract_address=${FOMO_CONTRACT}`),
+      _makeTags(`wasm._contract_address=${NETWARS_CONTRACT}`),
     );
     return historyQuery;
   } catch(e) {
@@ -102,7 +102,7 @@ async function Deposit(amount = 0, client = null) {
     let accounts = await client.offlineSigner.getAccounts();
     let tx = await client.wasmClient.execute(
       accounts[0].address,
-      FOMO_CONTRACT,
+      NETWARS_CONTRACT,
       entrypoint,
       client.fees,
       "Controlling the Network with " + deposit + " " + denom,
@@ -131,7 +131,7 @@ async function Claim(client = null) {
     let accounts = await client.offlineSigner.getAccounts();
     let tx = await client.wasmClient.execute(
       accounts[0].address,
-      FOMO_CONTRACT,
+      NETWARS_CONTRACT,
       entrypoint,
       client.fees,
       "Did I win?"

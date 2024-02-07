@@ -108,7 +108,7 @@ const IPFS_CID_PREFIX = 'ipfs://';
 const ARCHID_PROFILE_LINK_PREFIX = (IsTestnet) ? "https://test.archid.app/domains/" : "https://archid.app/domains/";
 
 export default {
-  name: 'Fomo',
+  name: 'Network Wars',
   components: { History, Modal },
   data: () => ({
     cwClient: null,

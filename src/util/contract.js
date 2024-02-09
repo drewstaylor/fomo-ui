@@ -66,11 +66,8 @@ async function History(round = 1, client = null) {
   if (!client) client = await Client();
   if (!round) round = 1;
   try {
-    // let historyQuery = await client.wasmClient.searchTx(
-    //   _makeTags(`wasm._contract_address=${NETWARS_CONTRACT}&wasm.round=${round}`),
-    // );
     let historyQuery = await client.wasmClient.searchTx(
-      _makeTags(`wasm._contract_address=${NETWARS_CONTRACT}`),
+      _makeTags(`wasm._contract_address=${NETWARS_CONTRACT}&wasm.round=${round}`),
     );
     return historyQuery;
   } catch(e) {

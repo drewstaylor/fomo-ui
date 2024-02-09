@@ -4,8 +4,26 @@
       <div class="head-left row">
         <h3 class="text-white activity col">Recent Activity</h3>
       </div>
+      <div class="round-select row" v-if="inputs.roundFilter && round">
+        <select class="col form-control round-selector" v-model="inputs.roundFilter">
+          <option 
+            v-for="game in newestRoundsFirst"
+            :class="{'active': game == inputs.roundFilter}"
+            :value="game" 
+            :key="'round-select-' + game"
+          >
+            <span v-if="game == round">Current Game</span>
+            <span v-else>Round {{game}}</span>
+          </option>
+        </select>
+        <div class="col caret">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6L8 10L12 6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
     </div>
-    <div class="body row" v-if="transactions.length">
+    <div class="body row" v-if="historyPage.length">
       <div 
         :class="{'row': true, 'history-item': true, 'you': (accounts.length) ? tx.sender == accounts[0].address : false}" 
         v-for="(tx, i) in historyPage" 
@@ -39,6 +57,9 @@
         </div>
       </div>
     </div>
+    <div v-if="!historyPage.length && round">
+      <h5>No activity yet in round {{round}}</h5>
+    </div>
   </div>
 </template>
 
@@ -69,13 +90,15 @@ export default {
     page: null,
     size: 10,
     limit: 100,
+    inputs: { roundFilter: null },
     profileLink: ARCHID_PROFILE_LINK_PREFIX,
     explorerLink: EXPLORER_LINK,
     defaultPlayerName: DefaultPlayerName,
   }),
   mounted: async function () {
-    if (this.state['round']) this.round = this.state.round;
     await this.loadHistory();
+    this.round = this.state.round;
+    this.inputs.roundFilter = this.state.round;
   },
   methods: {
     loadPlayer: async function (address) {
@@ -96,6 +119,7 @@ export default {
       // console.log('Tx History', this.transactions);
     },
     setPage: async function (page = 0) {
+      if (!this.historyPage.length) return this.page = page;
       let start, end;
       if (this.page == 0) {
         start = 0;
@@ -106,6 +130,7 @@ export default {
       }
 
       for (let i = start; i < (end + 1); i++) {
+        if (!this.transactions[i]) break;
         let events = this.transactions[i].events;
         if (Array.isArray(events)) {
           events.forEach(async (event) => {
@@ -174,6 +199,15 @@ export default {
       // console.log('pageData', pageData);
       return pageData;
     },
+    newestRoundsFirst: function() {
+      if (!this.round) return [];
+      let rounds = [];
+      for (let i = 0; i < this.round; i++) {
+        rounds.push(i+1);
+      }
+      rounds.reverse();
+      return rounds;
+    },
   },
 }
 </script>
@@ -236,5 +270,37 @@ div.display-name span {
   width: 10%;
   text-align: right;
   display: block;
+}
+.round-select.row {
+  margin-left: 0;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+select.round-selector {
+  border-radius: 8px;
+  border: 1px solid #FF4D00;
+  background: rgba(255, 77, 0, 0.30);
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+select.round-selector:active, select.round-selector:focus {
+  box-shadow: 3px 9px 32px -4px rgba(0, 0, 0, 0.07);
+}
+select.round-selector, select.round-selector span {
+  color: #FFFFFF;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+}
+.col.caret {
+  max-width: 16px;
+  padding: 0;
+  margin-left: -32px;
+  position: relative;
+  top: 5px;
+  pointer-events: none;
 }
 </style>

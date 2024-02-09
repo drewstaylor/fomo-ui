@@ -2,7 +2,13 @@
   <transition name="modal">
     <div :id="'wrapper-'+name" class="modal-wrapper" v-if="showModal" @click="close">
       <div :id="'modal-'+name" class="modalt">
-        <div class="modal-dialog" role="document">
+        <div 
+          :class="{
+            'modal-dialog': true, 
+            'webbed': name !== 'player-create' && name !== 'archid-select'
+          }" 
+          role="document"
+        >
           <!-- Modals From Props -->
           <div class="modal-content" v-if="name !== 'player-create'">
 

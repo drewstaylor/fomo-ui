@@ -9,16 +9,18 @@
     <div class="navbar col right">
       <!-- User / Nav -->
       <div class="navbar-brand">
-        <div class="brand-wrapper row">
-          <div class="col left raised">
-            <span class="brand brand-1">Network</span>
-            <span class="brand brand-2">Wars</span>
-          </div>
-          <div class="col right fade-web-right"></div>
-          <div class="info rules cursor-pointer" @click="welcomeModal();">
-            <span class="icon icon-info"></span>
+        <div class="fade-web-right">
+          <div class="brand-wrapper row">
+            <div class="col left raised">
+              <span class="brand brand-1">Network</span>
+              <span class="brand brand-2">Wars</span>
+            </div>          
+            <div class="info rules cursor-pointer" @click="welcomeModal();">
+              <span class="icon icon-info"></span>
+            </div>
           </div>
         </div>
+
       </div>
       <div class="get-connected" v-if="!connected">
         <button class="btn btn-connect btn-primary" @click="walletModal();">Connect</button>
@@ -376,8 +378,8 @@ li.nav-item {
   background: rgba(255, 77, 0, 0.20);
   box-sizing: border-box;
   flex: 1 0 0;
-  padding: 0.5em;
   overflow: hidden;
+  padding: 0;
 }
 .info.rules {
   width: 48px;
@@ -388,11 +390,13 @@ li.nav-item {
   background: linear-gradient(0deg, rgba(255, 77, 0, 0.30) 0%, rgba(255, 77, 0, 0.30) 100%), #000000;
   box-shadow: 3px 9px 32px -4px rgba(0, 0, 0, 0.07);
   position: relative;
-  right: 0.5em;
-  top: 3.25em;
+  right: 21px;
+  margin-top: 91px;
+  z-index: 300;
 }
 .col.left.raised {
   z-index: 100;
+  margin-top: 9px;
 }
 .navbar {
   border-radius: 8px;

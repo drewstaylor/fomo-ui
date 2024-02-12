@@ -96,8 +96,8 @@ export default {
     defaultPlayerName: DefaultPlayerName,
   }),
   mounted: async function () {
+    this.round = parseInt(this.state.round);
     await this.loadHistory();
-    this.round = this.state.round;
     this.inputs.roundFilter = this.state.round;
   },
   methods: {
@@ -110,7 +110,8 @@ export default {
     },
     loadHistory: async function () {
       if (!this.cwClient) return console.error("Error loading history, expected cwClient", this.cwClient);
-      let round = (this.round) ? this.round : 1;
+      let round = (this.round) ? this.round : null;
+      if (this.state && !round) round = this.round = parseInt(this.state.round);
       let query = await this.netwars.Query.History(round, this.cwClient);
       if (!Array.isArray(query)) return console.error("Error loading history, expected array", query)
       query.reverse(); // Sort -> newest txs first

@@ -4,11 +4,11 @@
       <div class="head-left row">
         <h3 class="text-white activity col">Recent Activity</h3>
       </div>
-      <div class="round-select row" v-if="inputs.roundFilter && round">
-        <select class="col form-control round-selector" v-model="inputs.roundFilter">
+      <div class="round-select row" v-if="roundFilter && round">
+        <select class="col form-control round-selector" v-model="roundFilter">
           <option 
             v-for="game in newestRoundsFirst"
-            :class="{'active': game == inputs.roundFilter}"
+            :class="{'active': game == roundFilter}"
             :value="game" 
             :key="'round-select-' + game"
           >
@@ -90,15 +90,25 @@ export default {
     page: null,
     size: 10,
     limit: 100,
-    inputs: { roundFilter: null },
+    roundFilter: null ,
     profileLink: ARCHID_PROFILE_LINK_PREFIX,
     explorerLink: EXPLORER_LINK,
     defaultPlayerName: DefaultPlayerName,
   }),
+  watch: {
+    async roundFilter() {
+      await this.loadHistory(this.roundFilter);
+    },
+    async state() {
+      this.round = parseInt(this.state.round);
+      this.roundFilter = this.round;
+      await this.loadHistory(this.round);
+    },
+  },
   mounted: async function () {
     this.round = parseInt(this.state.round);
-    await this.loadHistory();
-    this.inputs.roundFilter = this.state.round;
+    this.roundFilter = this.round;
+    await this.loadHistory(this.round);
   },
   methods: {
     loadPlayer: async function (address) {
@@ -108,10 +118,8 @@ export default {
       let domain = query.tokens[0];
       return domain;
     },
-    loadHistory: async function () {
+    loadHistory: async function (round = 1) {
       if (!this.cwClient) return console.error("Error loading history, expected cwClient", this.cwClient);
-      let round = (this.round) ? this.round : null;
-      if (this.state && !round) round = parseInt(this.state.round);
       let query = await this.netwars.Query.History(round, this.cwClient);
       if (!Array.isArray(query)) return console.error("Error loading history, expected array", query)
       query.reverse(); // Sort -> newest txs first

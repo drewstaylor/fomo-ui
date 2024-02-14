@@ -149,6 +149,9 @@ export default {
                 if (item['key'] == "depositer") {
                   this.transactions[i].displayName = await this.loadPlayer(item.value);
                 }
+                if (item['key'] == "winner") {
+                  this.transactions[i].displayName = await this.loadPlayer(item.value);
+                }
               });
             }
           });
@@ -197,6 +200,11 @@ export default {
               wasm.forEach(async (item) => {
                 if (item['key'] == "depositer") {
                   action = "execute_deposit";
+                  sender = item.value;
+                  pageData.push({action, sender, displayName, hash, height});
+                }
+                else if (item['key'] == "winner") {
+                  action = "execute_claim";
                   sender = item.value;
                   pageData.push({action, sender, displayName, hash, height});
                 }

@@ -50,9 +50,9 @@
             >Took control and added {{ secondsToMinutes(state.extensions) }}</span>
             <!-- Prize Claim -->
             <span
-              v-if="tx.action == 'execute_claim' && state.round"
+              v-if="tx.action == 'execute_claim'"
               class="descr action claim"
-            >Won round {{ state.round }} of {{ app_name }}</span>
+            >Won round {{ roundFilter }} of {{ app_name }}</span>
           </a>
         </div>
       </div>

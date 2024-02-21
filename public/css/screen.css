@@ -1,0 +1,122 @@
+@media screen and (max-width: 1550px) {
+    .page-content.col.left {
+        margin-left: 6px !important;
+        z-index: 1;
+    }
+    .navbar-brand {
+        margin-right: 0;
+    }
+    .connected.player-display {
+        min-width: 100% !important;
+        max-width: 100% !important;
+        margin-top: 1em;
+    }
+    .connected.player-display .player-row {
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+    }
+}
+
+@media screen and (max-width: 1480px) {
+    .btn-connect {
+        min-width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+@media screen and (max-width: 1400px) {
+    .app {
+        min-width: 800px !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: auto;
+    }
+    .navbar.col.right[data-v-7ba5bd90] {
+        max-width: 800px !important;
+        margin: 0;
+        padding: 0;
+        position: inherit;
+        left: unset;
+        display: block;
+    }
+    .navbar-brand {
+        min-width: 800px !important;
+        margin-top: 0.75em;
+        margin-bottom: 0.75em;
+    }
+    .btn-connect, .connected.player-display {
+        min-width: 800px !important;
+    }
+}
+
+@media (max-width: 800px) {
+    .app, .page-content, .home {
+        min-width: 98% !important;
+        max-width: 98% !important;
+        margin: auto;
+    }
+    .controls-main, .controls, .grid-container {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .game {
+        min-width: 90% !important;
+        max-width: 95% !important;
+    }
+    .controls-main, .controls-main .controls, .controls-main .controls button {
+        margin-left: unset !important;
+    }
+    .navbar.col.right {
+        left: unset !important;
+    }
+    .navbar-brand, .connected.player-display {
+        min-width: unset !important;
+        max-width: 95% !important;
+    }
+}
+
+
+@media (max-width: 660px) {
+    #app {
+        margin-left: 0.75em;
+    }
+    .gameplay {
+        max-width: 98% !important;
+    }
+    .timer-display .col .value, .separator {
+        font-size: 45px !important;
+    }
+    .prize-display, .prize-value {
+        font-size: 66px !important;
+    }
+    .controller, .controller .value {
+        width: auto !important;
+    }
+    .controller .value, .controller, .controller .label span {
+        font-size: 18px !important;
+    }
+    .controller .value {
+        margin-left: 1em;
+        margin-top: 4px;
+    }
+    .controls-main, .controls {
+        width: 97.5% !important;
+    }
+    .grid-container {
+        max-width: unset !important;
+        min-width: unset !important;
+    }
+    .modalt {
+        margin: 0;
+        margin-top: 15%;
+    }
+    .history-item {
+        flex-direction: column;
+    }
+    .row.game-data {
+        width: 90% !important;
+    }
+    div.action a {
+        margin-bottom: 1em;
+    }
+}

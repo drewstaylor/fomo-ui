@@ -421,4 +421,91 @@ li.nav-item {
   align-items: center;
   flex: 1 0 0;
 }
+
+@media screen and (max-width: 1550px) {
+  .page-content.col.left {
+    margin-left: 6px;
+    z-index: 1;
+  }
+  .navbar-brand {
+    margin-right: 0;
+  }
+  .connected.player-display {
+    min-width: 100%;
+    max-width: 100%;
+    margin-top: 1em;
+  }
+  .connected.player-display .player-row {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+  }
+}
+
+@media screen and (max-width: 1480px) {
+  .btn-connect {
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 1400px) {
+  .app {
+    min-width: 800px;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+  }
+  .page-content.col.left {
+    margin-right: 0;
+  }
+  .navbar.col.right {
+    max-width: 800px;
+    margin: 0;
+    padding: 0;
+    position: inherit;
+    left: unset;
+    display: block;
+  }
+  .navbar-brand {
+    min-width: 800px;
+    margin-top: 0.75em;
+    margin-bottom: 0.75em;
+  }
+  .btn-connect, .connected.player-display {
+    min-width: 800px;
+  }
+}
+
+@media (max-width: 800px) {
+  .app, .page-content {
+    min-width: 98%;
+    max-width: 98%;
+    margin: auto;
+  }
+  .navbar.col.right {
+    left: unset !important;
+  }
+  .navbar-brand, .connected.player-display {
+    min-width: unset;
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 660px) {
+  .app, .page-content {
+    min-width: 98% !important;
+    max-width: 98% !important;
+  }
+  .page-content.col.left {
+    margin-right: 0.4em;
+  }
+  .navbar.col.right {
+    margin-left: 0.4em !important;
+  }
+
+  .navbar-brand, .btn-connect, .connected.player-display {
+    min-width: 98%;
+    max-width: 98%;
+  }
+}
 </style>

@@ -587,4 +587,54 @@ export default {
 .icon.deposit-denom {
   top: 3px;
 }
+
+@media (max-width: 800px) {
+  .controls-main, .controls, .grid-container {
+    width: 100%;
+    max-width: 100%;
+  }
+  .game {
+    min-width: 90%;
+    max-width: 95%;
+  }
+  .controls-main, .controls-main .controls, .controls-main .controls button {
+    margin-left: unset;
+  }
+}
+
+@media (max-width: 660px) {
+  .gameplay {
+    max-width: 98%;
+  }
+  .timer-display .col .value, .separator {
+    font-size: 45px;
+  }
+  .prize-display, .prize-value {
+    font-size: 66px;
+  }
+  .controller, .controller .value {
+    width: auto;
+  }
+  .controller .value, .controller, .controller .label span {
+    font-size: 18px;
+  }
+  .controller .value {
+    margin-left: 1em;
+    margin-top: 4px;
+  }
+  .controls-main, .controls {
+    width: 97.5%;
+  }
+  .grid-container {
+    max-width: unset;
+    min-width: unset;
+  }
+  .row.game-data {
+    width: 90%;
+    max-width: 90%;
+  }
+  .controls button {
+    margin-left: 2.5% !important;
+  }
+}
 </style>

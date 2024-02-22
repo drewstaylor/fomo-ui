@@ -320,4 +320,19 @@ select.round-selector, select.round-selector span {
   top: 5px;
   pointer-events: none;
 }
+
+@media (max-width: 660px) {
+  .history-item {
+    flex-direction: column;
+    align-items: start;
+  }
+  div.action a {
+    text-align: left;
+    margin-bottom: 1em;
+  }
+
+  .col.display-name, .col.action {
+    width: 100%;
+  }
+}
 </style>

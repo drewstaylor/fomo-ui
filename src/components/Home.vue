@@ -103,4 +103,11 @@ export default {
 </script>
 
 <style scoped>
+@media (max-width: 800px) {
+  .home {
+    min-width: 98%;
+    max-width: 98%;
+    margin: auto;
+  }
+}
 </style>

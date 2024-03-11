@@ -230,6 +230,9 @@ export default {
 </script>
 
 <style scoped>
+.game-history {
+  overflow-y: auto;
+}
 .history {
   padding: 1em;
 }

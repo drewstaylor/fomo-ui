@@ -625,9 +625,16 @@ export default {
   .controls-main, .controls {
     width: 97.5%;
   }
-  .grid-container {
-    max-width: unset;
+  .grid-container, .grid-mask {
+    max-width: 660px;
     min-width: unset;
+  }
+  .game {
+    overflow-x: hidden;
+  }
+  .grid-mask {
+    left: -3em;
+    width: 520px;
   }
   .row.game-data {
     width: 90%;

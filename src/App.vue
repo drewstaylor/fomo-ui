@@ -427,9 +427,9 @@ li.nav-item {
     margin-left: 6px;
     z-index: 1;
   }
-  .navbar-brand {
+  /* .navbar-brand {
     margin-right: 0;
-  }
+  } */
   .connected.player-display {
     min-width: 100%;
     max-width: 100%;

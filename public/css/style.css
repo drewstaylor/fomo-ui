@@ -222,6 +222,7 @@ div.loading.default {
   background: linear-gradient(0deg, rgba(255, 77, 0, 0.20) 0%, rgba(255, 77, 0, 0.20) 100%), #000;
   max-height: 75vh;
   overflow-y: auto;
+  z-index: 2000;
 }
 .modal-content, .modal-body, .modal-header, .modal-footer {
   background: transparent !important;

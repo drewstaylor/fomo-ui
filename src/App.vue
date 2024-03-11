@@ -424,13 +424,14 @@ li.nav-item {
 }
 
 @media screen and (max-width: 1630px) {
-  .connected.player-display {
-    min-width: 100%;
-    max-width: 100%;
-    margin-top: 1em;
-  }
   .navbar-brand {
-    margin-right: 0;
+    min-width: 200px;
+  }
+  .brand-1 {
+    font-size: 47px;
+  }
+  .brand-2 {
+    font-size: 87px;
   }
 }
 
@@ -445,10 +446,13 @@ li.nav-item {
   }
 }
 
-@media screen and (max-width: 1480px) {
-  .btn-connect {
-    min-width: 100%;
-    max-width: 100%;
+@media screen and (max-width: 1450px) {
+  .brand-1 {
+    margin-top: 12px;
+    font-size: 37px;
+  }
+  .brand-2 {
+    font-size: 77px;
   }
 }
 

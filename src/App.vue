@@ -292,6 +292,9 @@ export default {
   overflow: hidden;
   padding: 0;
 }
+.game-history {
+  overflow-y: auto;
+}
 .page-content.right {
   width: 100%;
   height: calc(90vh - (150px + 1em));

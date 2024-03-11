@@ -138,9 +138,6 @@ export default {
         this.content.header.subtitle = ['Connecting...'];
         break;
       }
-      case 'player-create': {
-        break;
-      }
       case 'archid-select': {
         this.content.header.title = 'Select ArchID';
         this.content.body.text = ['Select a name to use for this game'];
@@ -168,8 +165,11 @@ export default {
         this.content.body.text = this.msg.body;
         break;
       }
+      case 'player-create': {
+        break;
+      }
       default: {
-        console.warn("Init failed, unrecognized modal type");
+        console.warn("Init failed, unrecognized modal type", this.name);
         break;
       }
     }
@@ -177,6 +177,7 @@ export default {
   methods: {
     close: function (event) {
       if (event.target.classList[0] !== 'modal-wrapper') return;
+      if (document) document.body.style.overflowY = "";
       this.$emit('close', this.showModal);
     },
     selectDomain: async function (archid) {
@@ -233,10 +234,6 @@ li .btn.wallet-select {
 }
 #header-welcome .modal-title {
   text-align: center;
-}
-#modal-player-create, #modal-archid-select {
-  min-width: 50vw;
-  max-height: 50vh;
 }
 .modal-dialog, .modal-content {
   max-width: 100%;

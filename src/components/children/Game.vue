@@ -294,6 +294,7 @@ export default {
         error: false,
         success: false,
       };
+      if (document) document.body.style.overflowY = "hidden";
 
       // Tx broadcast
       let depositAmount = (this.state.min_deposit) ? Number(this.state.min_deposit) : 1000000000000000000;
@@ -310,6 +311,7 @@ export default {
           error: true,
           success: false,
         };
+        if (document) document.body.style.overflowY = "hidden";
         return;
       }
 
@@ -326,6 +328,7 @@ export default {
         error: false,
         success: true,
       };
+      if (document) document.body.style.overflowY = "hidden";
 
       // Resolve Updates
       await this.loadState();
@@ -352,6 +355,7 @@ export default {
         error: false,
         success: false,
       };
+      if (document) document.body.style.overflowY = "hidden";
 
       // Tx broadcast
       this.executeResult = await this.netwars.Execute.Claim(this.cwClient);
@@ -367,6 +371,7 @@ export default {
           error: true,
           success: false,
         };
+        if (document) document.body.style.overflowY = "hidden";
         return;
       }
 
@@ -386,6 +391,7 @@ export default {
         error: false,
         success: true,
       };
+      if (document) document.body.style.overflowY = "hidden";
 
       // Resolve updates
       await this.loadState();

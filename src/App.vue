@@ -216,12 +216,15 @@ export default {
     },
     welcomeModal: function () {
       this.showModal.welcome = !this.showModal.welcome;
+      if (this.showModal.welcome && document) document.body.style.overflowY = "hidden";
     },
     walletModal: function () {
       this.showModal.connect = !this.showModal.connect;
+      if (this.showModal.connect && document) document.body.style.overflowY = "hidden";
     },
     playerModal: function () {
       this.showModal.id = !this.showModal.id;
+      if (this.showModal.id && document) document.body.style.overflowY = "hidden";
     },
     resolveHistory: function () {
       ++this.historyRender;

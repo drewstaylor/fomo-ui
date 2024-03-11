@@ -77,6 +77,7 @@ export default {
   mounted: async function () {
     await this.loadDomains();
     if (this.tokens.length) this.loading = false;
+    if (document) document.body.style.overflowY = "hidden";
   },
   methods: {
     loadDomains: async function () {
@@ -104,6 +105,7 @@ export default {
       };
       this.$root.domains = this.tokens;
       this.$emit('setPlayer', player);
+      if (document) document.body.style.overflowY = "";
     },
     logout: function () {
       try {

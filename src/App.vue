@@ -293,7 +293,7 @@ export default {
   padding: 0;
 }
 .game-history {
-  overflow-y: auto;
+  overflow-y: auto !important;
 }
 .page-content.right {
   width: 100%;

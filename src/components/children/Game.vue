@@ -805,5 +805,8 @@ a.game-winner {
   .winner .sub-text-2 {
     display: none;
   }
+  .game.gameover-default, .game.gameover-winner {
+    border-right: none;
+  }
 }
 </style>

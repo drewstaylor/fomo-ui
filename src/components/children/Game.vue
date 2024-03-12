@@ -11,9 +11,24 @@
     </div>
   </div>
 
-  <div :class="{'game': true, 'orange': !readOnly}" v-if="state.expiration">
+  <div 
+    :class="{
+      'game': true, 
+      'orange': !readOnly, 
+      'gameover-default': gameover && winning !== you, 
+      'gameover-winner': gameover && winning == you,
+    }" 
+    v-if="state.expiration"
+  >
+    <div id="winning_animation" v-if="gameover && winning == you"></div>
 
-    <div :class="{'grid-mask': true, 'orange': winning !== you, 'diamond': winning == you}"></div>
+    <div 
+      :class="{
+        'grid-mask': true, 
+        'orange': winning !== you && !gameover, 
+        'diamond': winning == you && !gameover
+      }"
+    ></div>
 
     <!-- Game Active (Timer) -->
     <div class="gameplay" v-if="!gameover">
@@ -42,6 +57,7 @@
         <div :class="{'time-remaining': true, 'orange': winning == you, 'gameover': gameover}">Time Remaining</div>
       </div>
     </div>
+    <!-- Game Over (Stale Timer) -->
     <div class="gameplay" v-else>
       <div class="timer" v-if="timer">
         <div :class="{'timer-display': true, 'orange': winning == you}">
@@ -101,11 +117,19 @@
 
   <!-- Game Data Display -->
   <div class="game-data row" v-if="state.expiration">
-    <div class="prize-display" v-if="state.last_depositor">
-      <div class="prize-value" title="Prize Pool" alt="Prize Pool">{{prizeDisplay}}</div>
-      <div class="prize-denom" title="Prize Pool" alt="Prize Pool">{{denom}}<span class="icon icon-lg icon-denom"></span></div>
+    <div :class="{'prize-display': true, 'won': winning == you && gameover}" v-if="state.last_depositor">
+      <div class="winner-declaration" v-if="winning == you && gameover">You Win!</div>
+      <div class="prize-value" title="Prize Pool" alt="Prize Pool" v-if="!gameover || (gameover && winning == you)">{{prizeDisplay}}</div>
+      <div class="prize-denom" title="Prize Pool" alt="Prize Pool" v-if="!gameover || (gameover && winning == you)">{{denom}}<span class="icon icon-lg icon-denom"></span></div>
+      <div class="winner-avatar" v-if="gameover && winning !== you">
+        <div 
+          :class="{'img' :true, 'avatar': true, 'default': winnerAvatar == defaultAvatar}" 
+          :style="'background-image: url('+ winnerAvatar +');'"
+          v-if="winnerAvatar"
+        ></div>
+      </div>
     </div>
-    <hr class="ruled-line" />
+    <hr class="ruled-line" v-if="!gameover || (gameover && winning == you)" />
     <div class="controller" v-if="state.last_depositor">
       <div class="label">
         <span v-if="!gameover">Controller</span>
@@ -120,8 +144,9 @@
         <span>Congratulations, you won the Network Wars. Game will reset when you claim the prize.</span>
       </div>
       <div class="value max-control winner" v-if="winning !== you && gameover">
-        <a :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a>
-        <span> has won the Network Wars. Game will reset when they claim the prize.</span>
+        <a class="game-winner ucfirst" :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a><br/>
+        <div class="upcase sub-text sub-text-1">held control and won the Network Wars.</div>
+        <div class="upcase sub-text sub-text-2">A new round will start when they claim the prize. If the timer runs out and the prize is unclaimed, anyone can restart the game using the current prize funds.</div>
       </div>
     </div>
   </div>
@@ -162,7 +187,7 @@
 </template>
 
 <script>
-import { TokensOf } from '../../util/archid';
+import { Token, TokensOf } from '../../util/archid';
 import { Query, Execute } from '../../util/contract';
 import { FromAtto } from '../../util/denom';
 import { Client } from '../../util/client';
@@ -171,6 +196,9 @@ import Modal from './Modal.vue';
 
 const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
 const ARCHID_PROFILE_LINK_PREFIX = (IsTestnet) ? "https://test.archid.app/address/" : "https://archid.app/address/";
+const DefaultAvatar = "/img/token.svg";
+const IPFS_GATEWAY_PREFIX = 'https://ipfs.io/ipfs/';
+const IPFS_CID_PREFIX = 'ipfs://';
 
 export default {
   name: 'Game',
@@ -201,6 +229,9 @@ export default {
       success: false,
     },
     formatFromAtto: FromAtto,
+    winningAnimPlaying: false,
+    defaultAvatar: DefaultAvatar,
+    winnerAvatar: null,
   }),
   mounted: async function () {
     // Initial State
@@ -279,6 +310,16 @@ export default {
       } else {
         if (this.state.last_depositor == this.accounts[0].address) this.winning = this.you;
         else this.winning = await this.loadDomains(this.state.last_depositor);
+      }
+      if (this.gameover) {
+        if (!this.winningAnimPlaying && this.winning == this.you) {
+          await this.winnerAnimation();
+          this.winningAnimPlaying = true;
+        } else {
+          let winnerData = await Token(this.winning, this.cw721, this.cwClient);
+          let winnerImg = (winnerData.extension) ? winnerData.extension.image : null;
+          this.winnerAvatar = this.parseAvatar(winnerImg);
+        }
       }
     },
     // Execute fns
@@ -398,6 +439,41 @@ export default {
       this.$root.resolveUpdates();
       // console.log(this.executeResult);
     },
+    winnerAnimation: async function () {
+      await this.$nextTick();
+      if (!document || !window) return console.warn("Error resolving, dom or window", document, window);
+
+      for (let i=0; i < 30; i++) {
+        // Random rotation
+        let randomRotation = Math.floor(Math.random() * 360);
+        // Random width & height between 0 and view pane
+        let randomWidth = Math.floor(Math.random() * Math.max(800 || 0));
+        let randomHeight = Math.floor(Math.random() * (Math.random() * 800));
+        // Shapes
+        let randomShape = (Math.random() >= 0.6) ? 100 : 0;
+        
+        // Random animation-delay
+        let randomAnimationDelay = Math.floor(Math.random() * 10);
+
+        // Create confetti piece
+        let confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.top = randomHeight + 'px';
+        confetti.style.left = randomWidth + 'px';
+        confetti.style.borderRadius = randomShape + '%';
+        confetti.style.backgroundColor = "#FFF";
+        confetti.style.transform='skew(15deg) rotate(' + randomRotation + 'deg)';
+        confetti.style.animationDelay=randomAnimationDelay + 's';
+        let container = document.getElementById("winning_animation");
+        if (container) container.appendChild(confetti);
+      }
+    },
+    parseAvatar: function (avatar) {
+      if (typeof avatar !== 'string' || !avatar) return DefaultAvatar;
+      let img = (avatar.substr(0,7) == IPFS_CID_PREFIX) 
+        ? avatar.replace(IPFS_CID_PREFIX, IPFS_GATEWAY_PREFIX) : avatar;
+      return img;
+    },
   },
   computed: {
     gameLeader: function () {
@@ -449,6 +525,16 @@ export default {
 }
 .game.orange {
   background: rgba(255, 77, 0, 0.15);
+}
+.game.gameover-default, .game.gameover-winner {
+  border-right: 1px solid #FF4D00;
+  border-bottom: 1px solid #FF4D00;
+}
+.game.gameover-default {
+  background: linear-gradient(0deg, rgba(255, 77, 0, 0.30) 0%, rgba(255, 77, 0, 0.30) 100%), #000;
+}
+.game.gameover-winner {
+  background: rgb(145, 242, 255, 0.5);
 }
 .gameplay {
   position: absolute;
@@ -531,6 +617,18 @@ export default {
   width: 75%;
   margin: auto;
 }
+.prize-display.won {
+  text-align: center;
+  width: 90%;
+}
+.winner-declaration {
+  text-transform: uppercase;
+  color: #FFFFFF;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+}
 .prize-display .prize-value {
   color: #FFFFFF;
   font-size: 120px;
@@ -590,12 +688,67 @@ export default {
   font-weight: 400;
   line-height: 150%;
 }
+.controls-main {
+  position: relative;
+  z-index: 500;
+}
 .icon.deposit-denom {
   top: 3px;
 }
+#winning_animation {
+  height: 90vh;
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+.winner-avatar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: left;
+  margin-bottom: 1em;
+}
+.img.avatar {
+  background-size: contain;
+  background-color: rgba(255, 77, 0, 0.20);
+  background-position: center center;
+  background-repeat: no-repeat;
+  position: relative;
+  border-radius: 96px;
+  width: 96px;
+  height: 96px;
+  top: 8px;
+  flex-shrink: 0;
+}
+.img.avatar.default {
+  background-color: transparent;
+  border-radius: unset;
+}
+a.game-winner {
+  color: #FF4D00;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
+.winner .sub-text {
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+}
+.winner .sub-text-1 {
+  color: #FFFFFF;
+}
+.winner .sub-text-2 {
+  color: rgba(255, 255, 255, 0.60);
+}
+.max-control.winner a, .max-control.winner div {
+  padding-bottom: 1em;
+}
 
 @media (max-width: 800px) {
-  .controls-main, .controls, .grid-container {
+  .controls-main, .controls, .grid-container, #winning_animation {
     width: 100%;
     max-width: 100%;
   }
@@ -631,7 +784,7 @@ export default {
   .controls-main, .controls {
     width: 97.5%;
   }
-  .grid-container, .grid-mask {
+  .grid-container, .grid-mask, #winning_animation {
     max-width: 660px;
     min-width: unset;
   }
@@ -648,6 +801,9 @@ export default {
   }
   .controls button {
     margin-left: 2.5% !important;
+  }
+  .winner .sub-text-2 {
+    display: none;
   }
 }
 </style>

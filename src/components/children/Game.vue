@@ -789,15 +789,20 @@ a.game-winner {
     min-width: unset;
   }
   .game {
-    overflow-x: hidden;
+    overflow: hidden;
   }
   .grid-mask {
     left: -3em;
     width: 520px;
   }
+  .game {
+    position: absolute;
+    top: 8.4em;
+  }
   .row.game-data {
     width: 90%;
     max-width: 90%;
+    top: 50%;
   }
   .controls button {
     margin-left: 2.5% !important;
@@ -807,6 +812,7 @@ a.game-winner {
   }
   .game.gameover-default, .game.gameover-winner {
     border-right: none;
+    min-height: fit-content;
   }
 }
 </style>

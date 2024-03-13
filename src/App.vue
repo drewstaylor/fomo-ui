@@ -1,5 +1,20 @@
 <template>
   <div class="app row">
+    <!-- Mobile Brand -->
+    <div class="navbar-brand brand mobile">
+      <div class="fade-web-right">
+        <div class="brand-wrapper row">
+          <div class="col left raised">
+            <span class="brand brand-1">Network</span>
+            <span class="brand brand-2">Wars</span>
+          </div>          
+          <div class="info rules cursor-pointer" @click="welcomeModal();">
+            <span class="icon icon-info"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Page Content: Left -->
     <div class="page-content col left">
       <router-view :key="render" />
@@ -20,8 +35,8 @@
             </div>
           </div>
         </div>
-
       </div>
+      <!-- Connect Wallet -->
       <div class="get-connected" v-if="!connected">
         <button class="btn btn-connect btn-primary" @click="walletModal();">Connect</button>
       </div>
@@ -425,6 +440,9 @@ li.nav-item {
   align-items: center;
   flex: 1 0 0;
 }
+.brand.mobile {
+  display: none;
+}
 
 @media screen and (max-width: 1630px) {
   .navbar-brand {
@@ -503,6 +521,10 @@ li.nav-item {
 }
 
 @media (max-width: 660px) {
+  .app {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+  }
   .app, .page-content {
     min-width: 98% !important;
     max-width: 98% !important;
@@ -511,12 +533,22 @@ li.nav-item {
     margin-right: 0.4em;
   }
   .navbar.col.right {
+    display: none;
+  }
+  .brand.mobile {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0.5em;
+    max-width: 98%;
+  }
+  /* .navbar.col.right {
     margin-left: 0.4em !important;
   }
 
   .navbar-brand, .btn-connect, .connected.player-display {
     min-width: 98%;
     max-width: 98%;
-  }
+  } */
 }
 </style>

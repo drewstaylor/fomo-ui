@@ -242,10 +242,4 @@ li .btn.wallet-select {
   margin-top: 1em;
   margin-bottom: 1em;
 }
-
-@media (max-width: 660px) {
-  #modal-welcome {
-    overflow: hidden;
-  }
-}
 </style>

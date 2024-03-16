@@ -444,18 +444,6 @@ li.nav-item {
   display: none;
 }
 
-@media screen and (max-width: 1630px) {
-  .navbar-brand {
-    min-width: 200px;
-  }
-  .brand-1 {
-    font-size: 47px;
-  }
-  .brand-2 {
-    font-size: 87px;
-  }
-}
-
 @media screen and (max-width: 1550px) {
   .page-content.col.left {
     margin-left: 6px;
@@ -464,16 +452,6 @@ li.nav-item {
   .connected.player-display .player-row {
     padding-top: 0.5em;
     padding-bottom: 0.5em;
-  }
-}
-
-@media screen and (max-width: 1450px) {
-  .brand-1 {
-    margin-top: 12px;
-    font-size: 37px;
-  }
-  .brand-2 {
-    font-size: 77px;
   }
 }
 
@@ -542,13 +520,5 @@ li.nav-item {
     margin-bottom: 0.5em;
     max-width: 98%;
   }
-  /* .navbar.col.right {
-    margin-left: 0.4em !important;
-  }
-
-  .navbar-brand, .btn-connect, .connected.player-display {
-    min-width: 98%;
-    max-width: 98%;
-  } */
 }
 </style>

@@ -380,6 +380,28 @@ div.loading.default {
   }
 }
 
+@media screen and (max-width: 1630px) {
+  .navbar-brand {
+    min-width: 200px;
+  }
+  .brand-1 {
+    font-size: 47px;
+  }
+  .brand-2 {
+    font-size: 87px;
+  }
+}
+
+@media screen and (max-width: 1450px) {
+  .brand-1 {
+    margin-top: 12px;
+    font-size: 37px;
+  }
+  .brand-2 {
+    font-size: 77px;
+  }
+}
+
 @media (max-width: 1440px) {
   .modalt {
     left: 38%;

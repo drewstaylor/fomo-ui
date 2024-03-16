@@ -812,7 +812,7 @@ a.game-winner {
   }
   .game.gameover-default, .game.gameover-winner {
     border-right: none;
-    min-height: fit-content;
+    min-height: 90vh;
   }
 }
 </style>

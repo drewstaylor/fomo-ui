@@ -23,7 +23,7 @@
     <!-- Page Content: Right -->
     <div class="navbar col right">
       <!-- User / Nav -->
-      <div class="navbar-brand">
+      <div :class="{'navbar-brand': true, 'connected': connected && player.id}">
         <div class="fade-web-right">
           <div class="brand-wrapper row">
             <div class="col left raised">

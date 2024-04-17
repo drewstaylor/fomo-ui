@@ -142,10 +142,39 @@ async function Claim(client = null) {
   }
 }
 
+/**
+ * Unlock and reset game, keeping the current prize pot, if winner does not claim prize 
+ * within the specified timeline
+ * @param {SigningCosmWasmClient} client? :  (Optional) instance of signing client
+ * @returns {ExecuteResult}
+ */
+async function UnlockStale(client = null) {
+  if (!client) client = await Client();
+  try {
+    let entrypoint = {
+      unlock_stale: {}
+    };
+    let accounts = await client.offlineSigner.getAccounts();
+    let tx = await client.wasmClient.execute(
+      accounts[0].address,
+      NETWARS_CONTRACT,
+      entrypoint,
+      client.fees,
+      "Who forgets to withdraw their prize? Crazy!"
+    );
+    return tx;
+  } catch (e) {
+    console.error(e);
+    return {
+      error: String(e)
+    };
+  }
+}
+
 
 // Exports
 const Query = { Game, PrizePool, History };
-const Execute = { Deposit, Claim};
+const Execute = { Deposit, Claim, UnlockStale};
 
 export {
   Query,

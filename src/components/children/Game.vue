@@ -31,7 +31,7 @@
     ></div>
 
     <!-- Game Active (Timer) -->
-    <div class="gameplay" v-if="!gameover">
+    <div class="gameplay">
       <div class="timer" v-if="timer">
         <div :class="{'timer-display': true, 'orange': winning == you, 'gameover': gameover}">
           <div class="col days">
@@ -57,33 +57,6 @@
         <div :class="{'time-remaining': true, 'orange': winning == you, 'gameover': gameover}">Time Remaining</div>
       </div>
     </div>
-    <!-- Game Over (Stale Timer) -->
-    <div class="gameplay" v-else>
-      <div class="timer" v-if="timer">
-        <div :class="{'timer-display': true, 'orange': winning == you}">
-          <div class="col days">
-            <div class="value">00</div>
-            <div class="label">Days</div>
-          </div>
-          <div class="col separator">:</div>
-          <div class="col hours">
-            <div class="value">00</div>
-            <div class="label">Hours</div>
-          </div>
-          <div class="col separator">:</div>
-          <div class="col minutes">
-            <div class="value">00</div>
-            <div class="label">Minutes</div>
-          </div>
-          <div class="col separator">:</div>
-          <div class="col seconds">
-            <div class="value">00</div>
-            <div class="label">Seconds</div>
-          </div>
-        </div>
-        <div :class="{'time-remaining': true, 'orange': winning == you}">Time Remaining</div>
-      </div>
-    </div>
 
     <!-- Deposit -->
     <div class="controls-main active-game" v-if="!gameover && state.min_deposit">
@@ -103,12 +76,19 @@
     <!-- Gameover -->
     <div class="controls-main gameover" v-if="gameover && accounts && state.last_depositor">
       <div class="controls" v-if="accounts.length && !readOnly">
+        <!-- Claim Tx -->
         <button 
           class="btn btn-inverse" 
           @click="claim();"
           :disabled="state.last_depositor !== accounts[0].address"
           v-if="state.last_depositor == accounts[0].address"
         >Claim Prize</button>
+        <!-- Unlock Stale Tx -->
+        <button 
+          class="btn btn-inverse" 
+          @click="unlockStale();"
+          v-if="canUnlock"
+        >Restart Game With {{prizeDisplay}} {{denom}} Prize</button>
       </div>
     </div>
 
@@ -146,7 +126,7 @@
       <div class="value max-control winner" v-if="winning !== you && gameover">
         <a class="game-winner ucfirst" :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a><br/>
         <div class="upcase sub-text sub-text-1">held control and won the Network Wars.</div>
-        <div class="upcase sub-text sub-text-2">A new round will start when they claim the prize. If the timer runs out and the prize is unclaimed, anyone can restart the game using the current prize funds.</div>
+        <div class="upcase sub-text sub-text-2">A new round will start when they claim the prize. If the timer runs out and the prize is unclaimed, you can restart the game using the current prize funds.</div>
       </div>
     </div>
   </div>
@@ -250,7 +230,7 @@ export default {
     // State
     gameTimer: function () {
       if (typeof this.state.expiration !== "number") return "";
-      const targ = this.state.expiration * 1000;
+      const targ = (!this.gameover) ? this.state.expiration * 1000 : (this.state.expiration + this.state.stale) * 1000;
       const difference = +new Date(targ) - +new Date();
       let remaining = {};
       if (difference > 0) {
@@ -439,6 +419,62 @@ export default {
       this.$root.resolveUpdates();
       // console.log(this.executeResult);
     },
+    unlockStale: async function () {
+      // Confirmation notification
+      let msg = "Attempting to restart the game";
+      this.status = {
+        notification: [msg],
+        type: "confirm",
+      };
+      this.showModal = {
+        confirm: true,
+        error: false,
+        success: false,
+      };
+      if (document) document.body.style.overflowY = "hidden";
+
+      // Tx broadcast
+      this.executeResult = await this.netwars.Execute.UnlockStale(this.cwClient);
+
+      // Error notification
+      if (this.executeResult['error']) {
+        this.status = {
+          notification: [this.executeResult.error],
+          type: "error",
+        };
+        this.showModal = {
+          confirm: false,
+          error: true,
+          success: false,
+        };
+        if (document) document.body.style.overflowY = "hidden";
+        return;
+      }
+
+      // Success notification
+      let prize = this.prizeDisplay + " " + this.denom;
+      this.status = {
+        notification: {
+          title: "Game Restarted",
+          body: [
+            "You restarted the game.",
+            "The prize of "+ prize + " has been carried over from the last game"
+          ]
+        },
+        type: "success",
+      };
+      this.showModal = {
+        confirm: false,
+        error: false,
+        success: true,
+      };
+      if (document) document.body.style.overflowY = "hidden";
+
+      // Resolve updates
+      await this.loadState();
+      this.$root.resolveUpdates();
+      // console.log(this.executeResult);
+    },
     winnerAnimation: async function () {
       await this.$nextTick();
       if (!document || !window) return console.warn("Error resolving, dom or window", document, window);
@@ -510,6 +546,15 @@ export default {
       if (currentTime >= expirationTime) return true;
       else return false;
     },
+    canUnlock: function () {
+      if (typeof this.state.expiration !== "number" || typeof this.state.last_depositor !== "string") return null;
+      if (!this.accounts.length) return null;
+      if (this.state.last_depositor == this.accounts[0].address) return false;
+      let expirationTime = new Date((this.state.expiration + this.state.stale) * 1000).getTime();
+      let currentTime = new Date().getTime();
+      if (currentTime >= expirationTime) return true;
+      else return false;
+    }
   },
 }
 </script>

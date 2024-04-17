@@ -71,7 +71,7 @@ const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
 const DefaultPlayerName = 'You';
 const CW721_CONTRACT = process.env.VUE_APP_ARCHID_CW721_CONTRACT;
 const ARCHID_PROFILE_LINK_PREFIX = (IsTestnet) ? "https://test.archid.app/address/" : "https://archid.app/address/";
-const EXPLORER_LINK = (IsTestnet) ? "https://testnet.mintscan.io/archway-testnet/txs/" : "https://www.mintscan.io/archway/tx/";
+const EXPLORER_LINK = (IsTestnet) ? "https://www.mintscan.io/archway-testnet/tx/" : "https://www.mintscan.io/archway/tx/";
 
 export default {
   name: 'History',

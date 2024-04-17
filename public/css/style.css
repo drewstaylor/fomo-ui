@@ -392,12 +392,6 @@ div.loading.default {
   }
 }
 
-@media screen and (max-width: 1600px) {
-  .navbar-brand.connected {
-    min-width: 200px !important;
-  }
-}
-
 @media screen and (max-width: 1490px) {
   .brand-1 {
     margin-top: 12px;

@@ -848,7 +848,7 @@ a.game-winner {
   .row.game-data {
     width: 90%;
     max-width: 90%;
-    top: 50%;
+    top: 55vh;
   }
   .controls button {
     margin-left: 2.5% !important;

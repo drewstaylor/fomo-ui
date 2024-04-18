@@ -22,42 +22,44 @@
 
     <!-- Page Content: Right -->
     <div class="navbar col right">
-      <!-- User / Nav -->
-      <div :class="{'navbar-brand': true, 'connected': connected && player.id}">
-        <div class="fade-web-right">
-          <div class="brand-wrapper row">
-            <div class="col left raised">
-              <span class="brand brand-1">Network</span>
-              <span class="brand brand-2">Wars</span>
-            </div>          
-            <div class="info rules cursor-pointer" @click="welcomeModal();">
-              <span class="icon icon-info"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Connect Wallet -->
-      <div class="get-connected" v-if="!connected">
-        <button class="btn btn-connect btn-primary" @click="walletModal();">Connect</button>
-      </div>
-      <div class="connected player-display" v-if="connected && player.id">
-        <div class="row player-row">
-          <div class="col left">
-            <button class="btn btn-secondary player-id">{{player.id}}</button>
-            <div class="row sub">
-              <div class="col sub">
-                <button class="btn btn-tertiary change-id" @click="playerModal();">Change</button>
-                <button class="btn btn-tertiary logout" @click="logout();">
-                  <span class="icon icon-logout"></span>
-                </button>
+      <div class="nav-wrapper">
+        <!-- User / Nav -->
+        <div :class="{'navbar-brand': true, 'connected': connected && player.id}">
+          <div class="fade-web-right">
+            <div class="brand-wrapper row">
+              <div class="col left raised">
+                <span class="brand brand-1">Network</span>
+                <span class="brand brand-2">Wars</span>
+              </div>          
+              <div class="info rules cursor-pointer" @click="welcomeModal();">
+                <span class="icon icon-info"></span>
               </div>
             </div>
           </div>
-          <div class="col right">
-            <div 
-              :class="{'img' :true, 'avatar': true, 'default': avatar == defaultAvatar}" 
-              :style="'background-image: url('+ avatar +');'"
-            ></div>
+        </div>
+        <!-- Connect Wallet -->
+        <div class="get-connected" v-if="!connected">
+          <button class="btn btn-connect btn-primary" @click="walletModal();">Connect</button>
+        </div>
+        <div class="connected player-display" v-if="connected && player.id">
+          <div class="row player-row">
+            <div class="col left">
+              <button class="btn btn-secondary player-id">{{player.id}}</button>
+              <div class="row sub">
+                <div class="col sub">
+                  <button class="btn btn-tertiary change-id" @click="playerModal();">Change</button>
+                  <button class="btn btn-tertiary logout" @click="logout();">
+                    <span class="icon icon-logout"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col right">
+              <div 
+                :class="{'img' :true, 'avatar': true, 'default': avatar == defaultAvatar}" 
+                :style="'background-image: url('+ avatar +');'"
+              ></div>
+            </div>
           </div>
         </div>
       </div>
@@ -417,6 +419,12 @@ li.nav-item {
 .col.left.raised {
   margin-top: 9px;
 }
+.nav-wrapper {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
 .navbar {
   border-radius: 8px;
 }
@@ -457,7 +465,7 @@ li.nav-item {
 
 @media screen and (max-width: 1600px) {
   .navbar-brand {
-    min-width: 200px;
+    min-width: 100px;
   }
 }
 
@@ -470,6 +478,9 @@ li.nav-item {
   }
   .page-content.col.left {
     margin-right: 0;
+  }
+  .nav-wrapper {
+    display: unset;
   }
   .navbar.col.right {
     max-width: 800px;

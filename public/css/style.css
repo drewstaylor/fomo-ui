@@ -381,24 +381,32 @@ div.loading.default {
 }
 
 @media screen and (max-width: 1630px) {
-  .navbar-brand {
-    min-width: 200px;
-  }
   .brand-1 {
-    font-size: 47px;
+    margin-top: 3px;
+    font-size: 45px;
   }
   .brand-2 {
-    font-size: 87px;
+    font-size: 85px;
   }
 }
 
-@media screen and (max-width: 1490px) {
+@media screen and (max-width: 1600px) {
   .brand-1 {
-    margin-top: 12px;
-    font-size: 37px;
+    margin-top: 13px;
+    font-size: 35px;
   }
   .brand-2 {
-    font-size: 77px;
+    font-size: 75px;
+  }
+}
+
+@media screen and (max-width: 1530px) {
+  .brand-1 {
+    margin-top: 34px;
+    font-size: 25px;
+  }
+  .brand-2 {
+    font-size: 55px;
   }
 }
 

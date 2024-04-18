@@ -1,6 +1,5 @@
 import { coin } from "@cosmjs/stargate";
 import { Client } from './client';
-import { FromAtto } from './denom';
 
 const NETWARS_CONTRACT = process.env.VUE_APP_NETWARS_CONTRACT;
 const IsTestnet = (/true/).test(process.env.VUE_APP_IS_TESTNET);
@@ -91,8 +90,6 @@ async function Deposit(amount = 0, client = null) {
   if (!client) client = await Client();
   try {
     let funds = [coin(String(amount), client.chainInfo.currencies[0].coinMinimalDenom)];
-    let deposit = FromAtto(amount);
-    let denom = (IsTestnet) ? "CONST" : "ARCH";
     let entrypoint = {
       deposit: {}
     };
@@ -102,7 +99,7 @@ async function Deposit(amount = 0, client = null) {
       NETWARS_CONTRACT,
       entrypoint,
       client.fees,
-      "Controlling the Network with " + deposit + " " + denom,
+      "We all like to be in control don't we?",
       funds
     );
     return tx;

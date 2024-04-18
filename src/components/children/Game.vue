@@ -126,7 +126,7 @@
       <div class="value max-control winner" v-if="winning !== you && gameover">
         <a class="game-winner ucfirst" :href="profileLink + state.last_depositor" target="_blank">{{ winning }}</a><br/>
         <div class="upcase sub-text sub-text-1">held control and won the Network Wars.</div>
-        <div class="upcase sub-text sub-text-2">A new round will start when they claim the prize. If the timer runs out and the prize is unclaimed, you can restart the game using the current prize funds.</div>
+        <div class="upcase sub-text sub-text-2" v-if="accounts">A new round will start when they claim the prize. If the timer runs out and the prize is unclaimed, you can restart the game using the current prize funds.</div>
       </div>
     </div>
   </div>

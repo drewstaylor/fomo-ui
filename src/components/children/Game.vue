@@ -319,7 +319,8 @@ export default {
 
       // Tx broadcast
       let depositAmount = (this.state.min_deposit) ? Number(this.state.min_deposit) : 1000000000000000000;
-      this.executeResult = await this.netwars.Execute.Deposit(depositAmount, this.cwClient);
+      let memo = (this.state.last_depositor == this.accounts[0].address) ? "I just can't help myself" : null;
+      this.executeResult = await this.netwars.Execute.Deposit(depositAmount, this.cwClient, memo);
       
       // Error notification
       if (this.executeResult['error']) {

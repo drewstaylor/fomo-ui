@@ -84,7 +84,7 @@ async function History(round = 1, client = null) {
  * @param {SigningCosmWasmClient} client? :  (Optional) instance of signing client
  * @returns {ExecuteResult}
  */
-async function Deposit(amount = 0, client = null) {
+async function Deposit(amount = 0, client = null, msg = null) {
   if (typeof amount !== 'number') return;
   if (amount <= 0) return;
   if (!client) client = await Client();
@@ -93,13 +93,14 @@ async function Deposit(amount = 0, client = null) {
     let entrypoint = {
       deposit: {}
     };
+    let memo = (typeof msg == 'string') ? msg : "We'd all like to be in control, right?";
     let accounts = await client.offlineSigner.getAccounts();
     let tx = await client.wasmClient.execute(
       accounts[0].address,
       NETWARS_CONTRACT,
       entrypoint,
       client.fees,
-      "We'd all like to be in control, right?",
+      memo,
       funds
     );
     return tx;

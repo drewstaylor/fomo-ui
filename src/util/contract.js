@@ -99,7 +99,7 @@ async function Deposit(amount = 0, client = null) {
       NETWARS_CONTRACT,
       entrypoint,
       client.fees,
-      "We all like to be in control don't we?",
+      "We all like to be in control, right?",
       funds
     );
     return tx;

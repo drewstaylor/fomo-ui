@@ -456,7 +456,7 @@ li.nav-item {
 }
 
 @media screen and (max-width: 1600px) {
-  .navbar-brand.connected {
+  .navbar-brand {
     min-width: 200px;
   }
 }
@@ -479,7 +479,7 @@ li.nav-item {
     left: unset;
     display: block;
   }
-  .navbar-brand, .navbar-brand.connected {
+  .navbar-brand {
     min-width: 800px;
     margin-top: 0.75em;
     margin-bottom: 0.75em;

@@ -321,6 +321,12 @@ select.round-selector, select.round-selector span {
   pointer-events: none;
 }
 
+@media screen and (max-width: 1600px) {
+  div.action a span, div.display-name span {
+    font-size: 14px;
+  }
+}
+
 @media (max-width: 660px) {
   .history-item {
     flex-direction: column;

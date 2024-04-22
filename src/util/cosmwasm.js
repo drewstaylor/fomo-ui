@@ -76,10 +76,10 @@ async function leapClient() {
   if (!window['leap']) return {};
 
   let chainData = Blockchain;
-  chainData.coinType = 118;
-  chainData.bip44 = {
-    coinType: 118
-  };
+  // chainData.coinType = 118;
+  // chainData.bip44 = {
+  //   coinType: 118
+  // };
 
   // User must authorize "experimental" chain
   await window.leap.experimentalSuggestChain(chainData);

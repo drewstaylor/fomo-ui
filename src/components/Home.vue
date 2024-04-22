@@ -18,6 +18,7 @@
       v-bind:cwClient="cwClient"
       v-bind:readOnly="readOnly"
       v-if="state == gameState"
+      @history="emitHistory"
     ></Game>
 
   </div>
@@ -98,6 +99,9 @@ export default {
       this.readOnly = true;
       this.state = this.gameState;
     },
+    emitHistory: function () {
+      this.$root.resolveHistory();
+    }
   }
 }
 </script>

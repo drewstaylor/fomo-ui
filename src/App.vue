@@ -70,6 +70,7 @@
           v-bind:cwClient="readOnlyClient"
           v-bind:accounts="accounts"
           v-bind:state="state"
+          @history="resolveHistory"
           :key="historyRender"
         >
         </History>

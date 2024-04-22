@@ -188,6 +188,7 @@ export default {
     readOnly: Boolean,
   },
   components: { Modal },
+  emits: ['history'],
   data: () => ({
     state: {},
     netwars: { Query, Execute },
@@ -269,7 +270,9 @@ export default {
     // Query fns
     loadState: async function () {
       if (!this.cwClient) return;
-      this.state = await this.netwars.Query.Game(this.cwClient);
+      let state = await this.netwars.Query.Game(this.cwClient);
+      if (state.last_depositor !== this.state.last_depositor) this.$emit('history', true);
+      this.state = state;
       await this.loadPrizePool();
       await this.loadWinning();
     },

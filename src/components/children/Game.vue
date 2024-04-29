@@ -257,6 +257,11 @@ export default {
         gameover: remaining.gameover
       };
       this.timer = timerOutput;
+      // Resolve updates every second if game 
+      // is ending in less than 10 seconds
+      if (remaining.days == 0 && remaining.hours == 0 && remaining.minutes == 0 && remaining.seconds < 10) {
+        this.loadStateHandler();
+      }
     },
     closeModals: function () {
       this.status = {
@@ -275,6 +280,9 @@ export default {
       this.state = state;
       await this.loadPrizePool();
       await this.loadWinning();
+    },
+    loadStateHandler: async function() {
+      await this.loadState();
     },
     loadDomains: async function (address) {
       let query = await TokensOf(this.cw721, address, this.cwClient, 1, null);

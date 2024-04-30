@@ -146,7 +146,7 @@ export default {
             if (event['type'] == "wasm") {
               let wasm = event.attributes;
               wasm.forEach(async (item) => {
-                if (item['key'] == "depositer") {
+                if (item['key'] == "depositer" || item['key'] == "depositor") {
                   this.transactions[i].displayName = await this.loadPlayer(item.value);
                 }
                 if (item['key'] == "winner") {
@@ -198,7 +198,7 @@ export default {
             if (event['type'] == "wasm") {
               let wasm = event.attributes;
               wasm.forEach(async (item) => {
-                if (item['key'] == "depositer") {
+                if (item['key'] == "depositer" || item['key'] == "depositor") {
                   action = "execute_deposit";
                   sender = item.value;
                   pageData.push({action, sender, displayName, hash, height});

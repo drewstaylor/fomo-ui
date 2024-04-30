@@ -825,8 +825,9 @@ a.game-winner {
   .timer-display .col .value, .separator {
     font-size: 45px;
   }
-  .prize-display, .prize-value {
-    font-size: 66px;
+  .prize-display .prize-value {
+    margin-top: 60px;
+    font-size: 60px;
   }
   .controller, .controller .value {
     width: auto;
